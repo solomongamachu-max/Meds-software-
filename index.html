@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>Adult & Pediatric Drug Dose Calculator — Ethiopia</title>
+<style>
+:root{--b:#0757a6;--b2:#0d74d1;--bg:#f3f8fd;--line:#cfe2f4;--ink:#18344f;--muted:#5d7184;--warn:#a85b00;--danger:#a61b1b;--ok:#16824c}
+*{box-sizing:border-box}body{margin:0;background:var(--bg);font-family:Arial,sans-serif;color:var(--ink)}
+header{background:linear-gradient(135deg,var(--b),var(--b2));color:#fff;text-align:center;padding:24px 16px}.meds-logo{display:inline-flex;align-items:center;justify-content:center;font-size:52px;font-weight:900;letter-spacing:-5px;line-height:1;margin:0 auto 8px;text-shadow:0 3px 10px #001f4d55}.meds-logo span{font-weight:800}.meds-logo strong{font-size:1.08em}.meds-logo em{font-style:normal;font-weight:700;opacity:.92}
+header h1{margin:0 0 6px;font-size:29px}header p{margin:4px;font-size:14px}.header-features{display:flex;justify-content:center;align-items:center;gap:8px 14px;flex-wrap:wrap;max-width:1000px;margin:8px auto 6px;font-size:13px;line-height:1.45}.header-feature{display:inline-flex;align-items:center;gap:7px;white-space:nowrap}.header-feature::before{content:"•";font-weight:900;opacity:.95}
+main{max-width:1120px;margin:20px auto;padding:0 15px}.card{background:#fff;border:1px solid var(--line);border-radius:14px;padding:20px;margin-bottom:17px;box-shadow:0 3px 12px #0757a611}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(205px,1fr));gap:14px}
+label{font-weight:700;display:block;margin:0 0 6px;color:#164d7d}
+input,select,button{width:100%;padding:12px;border:1px solid #b8d0e6;border-radius:9px;font-size:16px}
+input:focus,select:focus{outline:2px solid #a8d6ff}
+button{background:var(--b);color:white;border:0;font-weight:700;cursor:pointer;margin-top:10px}button:hover{background:#06467f}
+.secondary{background:#edf6ff;color:var(--b);border:1px solid #b8d0e6}.row{display:flex;gap:10px;flex-wrap:wrap}.row button{flex:1;min-width:170px}
+.hidden{display:none}.result{border-left:5px solid var(--b);background:#f7fbff;padding:16px;border-radius:8px;margin-top:15px}
+.big{font-size:25px;font-weight:800;color:#0757a6}.small{font-size:13px;color:var(--muted);line-height:1.55}
+.warn{background:#fff7e8;border-left:5px solid #e59a00;padding:13px;margin-top:12px;border-radius:7px}
+.danger{background:#fff0f0;border-left:5px solid var(--danger);padding:13px;margin-top:12px;border-radius:7px}
+.ok{background:#effbf5;border-left:5px solid var(--ok);padding:13px;margin-top:12px;border-radius:7px}
+.badge{font-size:11px;padding:3px 7px;background:#e6f4ff;color:var(--b);border-radius:15px}
+.optionbox{background:#edf6ff;border:1px solid #b8d0e6;border-radius:10px;padding:13px;margin-top:14px}
+footer{text-align:center;color:var(--muted);padding:20px;font-size:13px}
+h2,h3{color:var(--b)}table{width:100%;border-collapse:collapse;margin-top:12px}th,td{padding:9px;border-bottom:1px solid var(--line);text-align:left;font-size:14px}
+.pill{display:inline-block;padding:5px 9px;border-radius:15px;background:#e6f4ff;color:var(--b);margin:2px;font-size:12px}
+.autocomplete-wrap{position:relative}
+.drug-suggestions{position:absolute;z-index:1000;left:0;right:0;top:calc(100% + 4px);max-height:330px;overflow-y:auto;background:#fff;border:1px solid #9fc1df;border-radius:10px;box-shadow:0 8px 24px #18344f22;padding:5px}
+.drug-suggestions.hidden{display:none}
+.drug-suggestion{display:flex;align-items:center;justify-content:space-between;gap:10px;width:100%;padding:10px 12px;border:0;background:#fff;color:var(--ink);text-align:left;border-radius:7px;cursor:pointer;font-size:15px;margin:0}
+.drug-suggestion:hover,.drug-suggestion.active{background:#eaf5ff;color:var(--b)}
+.drug-suggestion .drug-tag{font-size:11px;color:var(--muted);white-space:nowrap}
+.drug-empty{padding:10px 12px;color:var(--muted);font-size:14px}
+.autocomplete-wrap input{position:relative;z-index:1001}
+
+
+.safety-panel{margin-top:16px;border:1px solid #cfe2f4;border-radius:12px;overflow:hidden;background:#fff;box-shadow:0 2px 9px #0757a60c}.safety-head{background:linear-gradient(135deg,#0757a6,#0d74d1);color:#fff;padding:13px 15px;display:flex;align-items:center;justify-content:space-between;gap:10px}.safety-head strong{font-size:17px}.safety-sub{font-size:12px;opacity:.92}.safety-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;padding:12px}.safety-item{padding:12px;border-radius:9px;background:#f7fbff;border:1px solid #dcecf8}.safety-item h4{margin:0 0 7px;font-size:14px;color:#164d7d}.safety-item ul{margin:0;padding-left:18px}.safety-item li{margin:3px 0;font-size:13px;line-height:1.45}.safety-preg{background:#fff8e8;border-color:#f0d28a}.safety-preg h4{color:#8a5a00}.safety-foot{padding:10px 14px;border-top:1px solid #e1edf6;background:#fbfdff;font-size:11px;color:#5d7184;line-height:1.5}.safety-pill{display:inline-block;padding:3px 7px;border-radius:12px;background:#eaf5ff;color:#0757a6;font-weight:700;font-size:11px;margin-left:5px}.safety-warn{background:#fff0f0;border-left:4px solid #a61b1b;padding:9px 11px;margin:10px 12px 0;border-radius:6px;font-size:12px}
+</style>
+</head>
+<body>
+<header>
+<div class="meds-logo" aria-label="MeDs logo"><span>Me</span><strong>D</strong><em>s</em></div>
+<div class="header-features" aria-label="MeDs features">
+  <span class="header-feature">Expanded Ethiopian clinical drug database</span>
+  <span class="header-feature">Indication-specific dosing</span>
+  <span class="header-feature">Weight-based dosing</span>
+  <span class="header-feature">Adult &amp; pediatric modes</span>
+  <span class="header-feature">Oral-liquid &amp; tablet conversion</span>
+  <span class="header-feature">Renal screening</span>
+  <span class="header-feature">Integrated safety alerts</span>
+</div>
+<p><strong>Developed by: Dr. Solomon Gamachu</strong></p>
+<p><strong>August 2026</strong></p>
+</header>
+
+<main>
+<section class="card">
+<div class="grid">
+<div class="drug-field"><label for="drug">Drug *</label>
+  <div class="autocomplete-wrap">
+    <input id="drug" list="druglist" placeholder="Type or select drug..." autocomplete="off"
+           role="combobox" aria-autocomplete="list" aria-expanded="false" aria-controls="drugSuggestions">
+    <datalist id="druglist"></datalist>
+    <div id="drugSuggestions" class="drug-suggestions hidden" role="listbox" aria-label="Drug suggestions"></div>
+  </div>
+</div>
+<div><label>Age (optional)</label><input id="age" type="number" min="0" step="0.01" placeholder="Leave blank if unknown"></div>
+<div><label>Calculation mode</label><select id="mode"><option value="auto">Auto (age if entered)</option><option value="adult">Adult</option><option value="ped">Pediatric</option></select></div>
+<div><label>Reference / guideline basis *</label><select id="source">
+<option value="ethiopia">Ethiopian STG / National Protocol</option>
+<option value="eml">Ethiopian Essential Medicines List (7th ed., 2024)</option>
+<option value="nelson">Nelson Textbook of Pediatrics</option>
+<option value="harrison">Harrison's Principles of Internal Medicine</option>
+<option value="gabbe">Gabbe's Obstetrics: Normal and Problem Pregnancies (9th ed., 2025)</option>
+<option value="williams">Williams Obstetrics (26th ed., 2022)</option>
+<option value="obgyn">Gabbe + Williams + Ethiopian obstetric/national protocol</option>
+</select></div>
+<div><label>Weight (kg) *</label><input id="weight" type="number" min="0.1" step="0.1" placeholder="e.g. 70"></div>
+<div><label>Sex <span class="badge">adult CrCl</span></label><select id="sex"><option value="male">Male</option><option value="female">Female</option></select></div>
+<div><label>Height (cm) <span class="badge">pediatric eGFR</span></label><input id="height" type="number" min="30" step="0.1" placeholder="Optional"></div>
+<div><label>Serum creatinine (mg/dL) <span id="renalBadge" class="badge">optional</span></label><input id="scr" type="number" min="0" step="0.01" placeholder="Leave blank when not needed"></div>
+</div>
+<div id="drugOptions" class="optionbox hidden"></div>
+<div class="optionbox" style="margin-top:10px">
+<label>Selected dosing reference</label>
+<div id="sourceInfo" class="small">Ethiopian Guideline / National Protocol is selected. Where a national disease-specific protocol is applicable, verify the current Ethiopian edition before administration.</div>
+</div>
+<div class="row">
+<button onclick="calculate()">Calculate dose</button>
+<button class="secondary" onclick="resetAll()">Clear</button>
+</div>
+<p class="small">Age is optional. If age is blank, the calculator does not block you: in Auto mode it displays both adult and pediatric pathways when both are available. Select Adult or Pediatric when you know the intended population. Weight is still required for weight-based calculations.</p>
+</section>
+
+<section class="card">
+<h3>Oral liquid / syrup & tablet/capsule conversion</h3>
+<div class="grid">
+<div><label>Dose to convert (mg)</label><input id="manualDose" type="number" min="0" step="0.01" placeholder="e.g. 250"></div>
+<div><label>Liquid concentration unit</label><select id="liqUnit"><option value="5">mg per 5 mL</option><option value="1">mg per 1 mL</option></select></div>
+<div><label>Liquid concentration</label><input id="liqConc" type="number" min="0" step="0.01" placeholder="e.g. 250"></div>
+<div><label>Tablet/capsule strength (optional)</label><input id="solidStrength" type="number" min="0" step="0.01" placeholder="e.g. 500 mg"></div>
+</div>
+<button onclick="calculateManualFormulation()">Calculate syrup / tablet volume</button>
+<div id="manualFormulation"></div>
+<p class="small">Enter the prescribed/calculated dose and the exact product concentration. For example, 250 mg/5 mL means 50 mg/mL; a 250 mg dose is 5 mL. Tablet/capsule conversion is mathematical only and does not round a dose to an available dosage form automatically.</p>
+</section>
+
+<section id="output" class="card hidden"></section>
+
+<section class="card">
+<h3>Clinical safety, standardization & references</h3>
+<ul class="small">
+<li><b>Standardized calculation rule:</b> the calculator first selects the clinical indication, then the adult or pediatric pathway, then applies the programmed dose expression, frequency and maximum. It does not use a single universal mg/kg rule for drugs whose adult dosing is indication-specific.</li>
+<li><b>Adult vs pediatric:</b> adult doses are fixed-dose or adult weight-based only when supported by the selected regimen; pediatric doses are weight/BSA/protocol based when appropriate. Age may be left blank, but the user should select Adult or Pediatric mode whenever the population is known.</li>
+<li><b>Range handling:</b> when a guideline gives a range, the calculator displays the full programmed range and identifies the common/default end where appropriate. The clinician must select the clinically appropriate dose; the calculator does not treat a midpoint as a universal recommended dose.</li>
+<li><b>Indication-specific dosing:</b> ceftriaxone, dexamethasone, metronidazole, vancomycin, furosemide, insulin, anticoagulants, anticonvulsants, antimalarials and other protocol-sensitive drugs use separate clinical options where applicable.</li>
+<li><b>Renal function:</b> creatinine is optional. Where renal adjustment is relevant, the calculator displays Cockcroft–Gault in adults or bedside Schwartz eGFR in children when the required inputs are available. It does not invent a renal adjustment when creatinine is blank.</li>
+<li><b>High-risk medicines:</b> vancomycin, aminoglycosides, insulin, anticoagulants, phenytoin, digoxin, concentrated electrolytes and other high-risk medicines require current institutional/national protocols, monitoring and specialist review where appropriate.</li>
+<li><b>Neonates and special populations:</b> neonatal dosing, severe hepatic disease, pregnancy, dialysis/CRRT, obesity, burns and critical illness may require separate dosing references and should not be inferred from a generic calculator pathway.</li>
+<li><b>Formulation:</b> verify the exact concentration and formulation before calculating oral-liquid volume. Different salts, preparations and combination products may not be interchangeable.</li>
+</ul>
+<h3>Reference hierarchy</h3>
+<p class="small"><b>Primary/local:</b> Ethiopian Ministry of Health Standard Treatment Guidelines (4th ed., 2021), applicable Ethiopian national disease/program guidelines, and Ethiopian Essential Medicines List (7th ed., 2024). <b>Major textbooks:</b> Nelson Textbook of Pediatrics; Harrison's Principles of Internal Medicine. <b>Obstetrics:</b> Gabbe's Obstetrics, 9th ed. (2025); Williams Obstetrics, 26th ed. (2022). <b>Specialized disease guidance:</b> current WHO malaria guidance for malaria-specific dosing and national malaria protocols. <b>Drug-specific:</b> current official product information/monographs and institutional antimicrobial, renal-dose, anticoagulation, insulin and therapeutic-drug-monitoring protocols. Where sources conflict, the current Ethiopian/national protocol and current product information for the exact formulation and indication should be checked first.</p>
+<p class="small"><b>Important:</b> The selector above changes the displayed reference framework; it does not claim that every medicine/indication is covered by every source. For national TB, malaria, obstetric, emergency and other disease-program regimens, the current Ethiopian national protocol should take priority. For pediatric dosing, Nelson is a major reference; for adult internal medicine, Harrison is a major reference. Drug-specific product information and institutional protocols may supersede textbook values. For vitamin D deficiency, high-dose repletion (for example, 50,000 IU weekly) is a treatment regimen, not routine daily supplementation, and should be used with appropriate clinical assessment.</p>
+</section>
+</main>
+<footer>Adult & Pediatric Drug Dose Calculator • Developed by: Dr. Solomon Gamachu • August 2026 • Ethiopia-focused clinical decision-support version</footer>
+
+<script>
+const D = {};
+D["paracetamol"]={name:"Paracetamol (Acetaminophen)",tags:["Analgesic", "Antipyretic"],opts:{
+"painfever":{label:"Pain / fever",p:[10, 15, 1000, "q4–6h PRN", "10–15 mg/kg/dose"],a:["500–1000 mg", "q4–6h PRN", "max 4 g/day in healthy adults; lower with liver risk"]}
+}};
+D["ibuprofen"]={name:"Ibuprofen",tags:["NSAID", "Analgesic"],opts:{
+"painfever":{label:"Pain / fever",p:[10, 10, 400, "q6–8h PRN", "10 mg/kg/dose; max 40 mg/kg/day"],a:["200–400 mg", "q6–8h PRN", "adult maximum depends on indication"]}
+}};
+D["diclofenac"]={name:"Diclofenac",tags:["NSAID"],opts:{
+"pain":{label:"Acute pain / inflammation",p:[1, 1, 50, "q8–12h", "~1 mg/kg/dose; short course"],a:["25–50 mg", "q8–12h", "max 150 mg/day"]}
+}};
+D["naproxen"]={name:"Naproxen",tags:["NSAID"],opts:{
+"pain":{label:"Pain / inflammation",p:[5, 10, 500, "q12h", "5–10 mg/kg/dose"],a:["250–500 mg", "q12h", "indication dependent"]}
+}};
+D["ketorolac"]={name:"Ketorolac",tags:["NSAID", "Acute pain"],opts:{
+"acute":{label:"Short-term acute pain",p:[0.5, 0.5, 30, "q6h", "0.5 mg/kg/dose; age/route limits apply"],a:["10–30 mg", "q6h PRN", "short duration only"]}
+}};
+D["morphine"]={name:"Morphine",tags:["Opioid", "High-risk"],opts:{
+"acute":{label:"Acute severe pain",p:[0.05, 0.1, 10, "q2–4h PRN", "0.05–0.1 mg/kg/dose; titrate"],a:["2–5 mg IV or 5–10 mg PO", "q2–4h PRN", "titrate with respiratory monitoring"]}
+}};
+D["tramadol"]={name:"Tramadol",tags:["Opioid analgesic"],opts:{
+"pain":{label:"Moderate pain",p:[1, 2, 100, "q6–8h", "1–2 mg/kg/dose; pediatric age restrictions apply"],a:["50–100 mg", "q4–6h PRN", "max/renal limits are indication dependent"]}
+}};
+D["amoxicillin"]={name:"Amoxicillin",tags:["Penicillin antibiotic"],opts:{
+"common":{label:"Common bacterial infection",p:[25, 50, 3000, "q8–12h", "25–50 mg/kg/day; indication dependent"],a:["500–1000 mg", "q8–12h", "indication dependent"]},
+"otitis":{label:"Acute otitis media / high-dose",p:[40, 45, 3000, "q12h", "80–90 mg/kg/day divided q12h"],a:["875–1000 mg", "q12h", "high-dose pathway when indicated"]}
+}};
+D["amoxicillin-clavulanate"]={name:"Amoxicillin/Clavulanate (Augmentin)",tags:["Beta-lactam/beta-lactamase inhibitor"],opts:{
+"mildmoderate":{label:"Mild–moderate infection — Ethiopian product dosing",p:[12.5,22.5,3000,"q12h","25–45 mg/kg/day of amoxicillin component; 2 divided doses"],a:["500/125 mg q8h or formulation-specific equivalent","q8h","Adult dosing depends on exact amoxicillin/clavulanate formulation and indication"]},
+"serious":{label:"More serious infection — Ethiopian product dosing",p:[22.5,35,3000,"q12h","45–70 mg/kg/day of amoxicillin component; 2 divided doses"],a:["875/125 mg q12h or formulation-specific equivalent","q12h","Adult dosing depends on exact formulation and indication"]},
+"aom_sinusitis_highdose":{label:"AOM / acute bacterial sinusitis — high-dose pediatric pathway",p:[45,45,4000,"q12h","90 mg/kg/day of amoxicillin component + 6.4 mg/kg/day clavulanate; 14:1 formulation"],a:["Adult regimen is indication/formulation specific","—","Use the exact adult product label/local protocol; do not extrapolate the pediatric 90 mg/kg/day regimen to adults"]}
+}};
+D["ampicillin"]={name:"Ampicillin",tags:["Penicillin antibiotic"],opts:{
+"common":{label:"Serious bacterial infection",p:[25, 50, 2000, "q6h", "25–50 mg/kg/dose; neonatal interval differs"],a:["1–2 g", "q4–6h", "indication dependent"]}
+}};
+D["benzylpenicillin"]={name:"Benzylpenicillin (Penicillin G)",tags:["Penicillin"],opts:{
+"severe":{label:"Severe susceptible infection",p:[50000, 100000, 4000000, "q4–6h", "50,000–100,000 units/kg/dose"],a:["1–4 million units", "q4–6h", "indication dependent"]}
+}};
+D["phenoxymethylpenicillin"]={name:"Phenoxymethylpenicillin (Penicillin V)",tags:["Penicillin"],opts:{
+"common":{label:"Streptococcal / susceptible infection",p:[25, 50, 1000, "q6–8h", "dose/course indication dependent"],a:["250–500 mg", "q6–8h", "indication dependent"]}
+}};
+D["cloxacillin"]={name:"Cloxacillin",tags:["Anti-staphylococcal penicillin"],opts:{
+"severe":{label:"Serious MSSA infection",p:[25, 50, 2000, "q6h", "25–50 mg/kg/dose"],a:["1–2 g", "q4–6h", "indication dependent"]}
+}};
+D["flucloxacillin"]={name:"Flucloxacillin",tags:["Anti-staphylococcal penicillin"],opts:{
+"severe":{label:"Serious MSSA infection",p:[25, 50, 2000, "q6h", "25–50 mg/kg/dose"],a:["1–2 g", "q6h", "indication dependent"]}
+}};
+D["cefazolin"]={name:"Cefazolin",tags:["Cephalosporin"],opts:{
+"common":{label:"Common susceptible infection",p:[25, 50, 2000, "q8h", "dose/course indication dependent"],a:["1–2 g", "q8h", "indication dependent"]},
+"severe":{label:"Severe infection",p:[25, 50, 2000, "q8h", "up to 100 mg/kg/day divided"],a:["2 g", "q8h", "severe infection pathway"]}
+}};
+D["cefuroxime"]={name:"Cefuroxime",tags:["Cephalosporin"],opts:{
+"common":{label:"Common bacterial infection",p:[15, 30, 1500, "q8h", "15–30 mg/kg/dose"],a:["750–1500 mg", "q8h", "route/indication dependent"]}
+}};
+D["cefotaxime"]={name:"Cefotaxime",tags:["3rd-generation cephalosporin"],opts:{
+"common":{label:"Serious infection",p:[50, 100, 2000, "q6–8h", "50–100 mg/kg/dose"],a:["1–2 g", "q6–8h", "indication dependent"]},
+"meningitis":{label:"Meningitis / severe CNS infection",p:[50, 100, 4000, "q6h", "up to 200 mg/kg/day"],a:["2 g", "q4–6h", "meningitis regimen"]}
+}};
+D["ceftriaxone"]={name:"Ceftriaxone",tags:["3rd-generation cephalosporin"],opts:{
+"common50":{label:"Common infection — 50 mg/kg/day (common/default)",p:[25,25,2000,"q12h (BID)","50 mg/kg/day = 25 mg/kg/dose BID"],a:["1–2 g/day","q12h (BID) when divided","adult dose depends on indication/severity; do not exceed 4 g/day"]},
+"common75":{label:"Common/serious infection — 75 mg/kg/day",p:[37.5,37.5,2000,"q12h (BID)","75 mg/kg/day = 37.5 mg/kg/dose BID"],a:["1–2 g/day","q12h (BID) when divided","adult dose depends on indication/severity; do not exceed 4 g/day"]},
+"meningitis":{label:"Meningitis — 100 mg/kg/day",p:[50,50,4000,"q12h (BID)","100 mg/kg/day = 50 mg/kg/dose BID; max 4 g/day"],a:["2 g","q12h (BID)","meningitis regimen; total daily dose commonly 4 g/day"]},
+"otitis":{label:"Acute bacterial otitis media — single IM dose",p:[50,50,1000,"single dose","50 mg/kg IM once; max 1 g"],a:["1 g IM","single dose","use indication-specific adult protocol"]}
+}};
+D["cefixime"]={name:"Cefixime",tags:["Oral cephalosporin"],opts:{
+"common":{label:"Common outpatient infection",p:[8, 8, 400, "q24h or q12h", "8 mg/kg/day"],a:["400 mg", "q24h or 200 mg q12h", "indication dependent"]}
+}};
+D["ceftazidime"]={name:"Ceftazidime",tags:["Antipseudomonal cephalosporin"],opts:{
+"severe":{label:"Severe gram-negative / Pseudomonas infection",p:[30, 50, 2000, "q8h", "30–50 mg/kg/dose"],a:["2 g", "q8h", "renal adjustment required"]}
+}};
+D["cefepime"]={name:"Cefepime",tags:["4th-generation cephalosporin"],opts:{
+"severe":{label:"Severe gram-negative infection",p:[50, 50, 2000, "q8–12h", "50 mg/kg/dose"],a:["2 g", "q8–12h", "renal adjustment required"]}
+}};
+D["piperacillin-tazobactam"]={name:"Piperacillin/Tazobactam",tags:["Broad-spectrum beta-lactam"],opts:{
+"severe":{label:"Severe polymicrobial / Pseudomonas infection",p:[80, 100, 4500, "q6–8h", "dose expressed as piperacillin component"],a:["3.375–4.5 g", "q6–8h", "renal/infusion strategy matters"]}
+}};
+D["meropenem"]={name:"Meropenem",tags:["Carbapenem"],opts:{
+"severe":{label:"Severe resistant bacterial infection",p:[20, 40, 2000, "q8h", "20–40 mg/kg/dose"],a:["1–2 g", "q8h", "renal adjustment required"]},
+"meningitis":{label:"Meningitis",p:[40, 40, 2000, "q8h", "40 mg/kg/dose"],a:["2 g", "q8h", "renal adjustment required"]}
+}};
+D["ertapenem"]={name:"Ertapenem",tags:["Carbapenem"],opts:{
+"severe":{label:"Complicated susceptible infection",p:[15, 15, 1000, "q12h", "15 mg/kg/dose"],a:["1 g", "q24h", "renal adjustment required"]}
+}};
+D["azithromycin"]={name:"Azithromycin",tags:["Macrolide"],opts:{
+"resp":{label:"Respiratory / atypical infection",p:[10, 10, 500, "q24h", "day 1 then 5 mg/kg/day in common regimens"],a:["500 mg", "q24h", "course depends on indication"]},
+"sti":{label:"Selected STI indication",p:[10, 10, 1000, "single dose", "follow current STI guideline"],a:["1 g", "single dose", "follow current STI guideline"]}
+}};
+D["clarithromycin"]={name:"Clarithromycin",tags:["Macrolide"],opts:{
+"common":{label:"Common bacterial infection",p:[7.5, 7.5, 500, "q12h", "7.5 mg/kg/dose q12h"],a:["250–500 mg", "q12h", "renal adjustment may be needed"]}
+}};
+D["doxycycline"]={name:"Doxycycline",tags:["Tetracycline"],opts:{
+"common":{label:"Common susceptible infection",p:[2, 2, 100, "q12h", "generally ≥8 years; indication dependent"],a:["100 mg", "q12h", "indication dependent"]}
+}};
+D["ciprofloxacin"]={name:"Ciprofloxacin",tags:["Fluoroquinolone"],opts:{
+"common":{label:"Selected susceptible infection",p:[10, 15, 750, "q12h", "pediatric use is indication/specialist dependent"],a:["500–750 mg", "q12h", "renal adjustment may be needed"]}
+}};
+D["levofloxacin"]={name:"Levofloxacin",tags:["Fluoroquinolone"],opts:{
+"common":{label:"Selected susceptible infection",p:[10, 10, 750, "q24h", "pediatric use indication-specific"],a:["500–750 mg", "q24h", "renal adjustment required"]}
+}};
+D["clindamycin"]={name:"Clindamycin",tags:["Lincosamide"],opts:{
+"common":{label:"Anaerobic / gram-positive infection",p:[10, 13, 600, "q8h", "10–13 mg/kg/dose"],a:["300–600 mg", "q6–8h", "severe infection may require higher IV doses"]}
+}};
+D["metronidazole"]={name:"Metronidazole",tags:["Anaerobic / antiprotozoal"],opts:{
+"anaerobe":{label:"Anaerobic infection",p:[7.5, 10, 500, "q8h", "7.5–10 mg/kg/dose"],a:["500 mg", "q8–12h", "indication dependent"]},
+"amoeba":{label:"Amoebiasis",p:[10, 15, 750, "q8h", "follow disease-specific course"],a:["500–750 mg", "q8h", "follow current amoebiasis guideline"]},
+"giardia":{label:"Giardiasis",p:[5, 10, 500, "q8–12h", "age/course dependent"],a:["250–500 mg", "q8–12h", "course indication dependent"]}
+}};
+D["vancomycin"]={name:"Vancomycin",tags:["Glycopeptide", "High-risk"],opts:{
+"serious":{label:"Serious systemic infection / MRSA",p:[15, 20, 2000, "q6–12h initially", "interval must be individualized"],a:["15–20 mg/kg", "q8–12h initially", "AUC/TDM and renal function required"]}
+}};
+D["gentamicin"]={name:"Gentamicin",tags:["Aminoglycoside", "High-risk"],opts:{
+"severe":{label:"Serious gram-negative infection",p:[2, 2.5, 160, "q8h or extended interval", "age/renal-function specific"],a:["5–7 mg/kg", "q24h where protocol supports", "renal adjustment/TDM required"]}
+}};
+D["amikacin"]={name:"Amikacin",tags:["Aminoglycoside", "High-risk"],opts:{
+"severe":{label:"Serious resistant gram-negative infection",p:[15, 15, 1000, "q24h extended interval", "15 mg/kg/day; neonatal/renal dosing differs"],a:["15 mg/kg", "q24h extended interval", "renal adjustment/TDM required"]}
+}};
+D["co-trimoxazole"]={name:"Co-trimoxazole (Trimethoprim/Sulfamethoxazole)",tags:["Antimicrobial"],opts:{
+"common":{label:"Common susceptible infection",p:[4, 5, 160, "q12h", "dose expressed as trimethoprim component"],a:["160 mg TMP component", "q12h", "indication dependent"]},
+"pcp":{label:"Pneumocystis jirovecii pneumonia",p:[5, 5, 320, "q6–8h", "15–20 mg/kg/day TMP component divided"],a:["15–20 mg/kg/day TMP", "q6–8h", "specialist regimen; renal adjustment"]}
+}};
+D["fluconazole"]={name:"Fluconazole",tags:["Antifungal"],opts:{
+"common":{label:"Common candidiasis",p:[6, 12, 800, "q24h", "6–12 mg/kg/day"],a:["100–400 mg", "q24h", "renal adjustment"]},
+"serious":{label:"Serious fungal infection",p:[6, 12, 800, "q24h", "follow specialist regimen"],a:["400–800 mg", "q24h", "renal adjustment"]}
+}};
+D["amphotericin-b"]={name:"Amphotericin B",tags:["Antifungal", "High-risk"],opts:{
+"severe":{label:"Serious systemic fungal infection",p:[0.5, 1, 50, "q24h", "formulation-specific; renal/electrolyte monitoring"],a:["0.3–1 mg/kg", "q24h", "formulation-specific"]}
+}};
+D["acyclovir"]={name:"Acyclovir",tags:["Antiviral"],opts:{
+"hsv":{label:"Serious HSV/VZV infection",p:[10, 20, 1000, "q8h IV", "10–20 mg/kg/dose"],a:["5–10 mg/kg IV", "q8h", "renal adjustment required"]},
+"oral":{label:"Selected oral HSV",p:[20, 20, 800, "q6h", "indication dependent"],a:["200–400 mg", "q4–5h", "renal adjustment may be required"]}
+}};
+D["furosemide"]={name:"Furosemide",tags:["Loop diuretic"],opts:{
+"edema":{label:"Edema / fluid overload",p:[1, 2, 40, "q6–12h", "1–2 mg/kg/dose; titrate"],a:["20–40 mg", "q6–12h or daily", "titrate to response"]},
+"pulmonary":{label:"Acute pulmonary edema",p:[1, 2, 80, "once then reassess", "emergency protocol"],a:["40–80 mg IV", "once then reassess", "emergency protocol"]}
+}};
+D["spironolactone"]={name:"Spironolactone",tags:["Potassium-sparing diuretic"],opts:{
+"edema":{label:"Edema / heart failure",p:[1, 3, 100, "q12–24h", "1–3 mg/kg/day"],a:["25–50 mg", "q24h", "monitor K+/renal function"]}
+}};
+D["hydrochlorothiazide"]={name:"Hydrochlorothiazide",tags:["Thiazide"],opts:{
+"htn":{label:"Hypertension / edema",p:[1, 2, 50, "q24h", "1–2 mg/kg/day"],a:["12.5–25 mg", "q24h", "titrate"]}
+}};
+D["enalapril"]={name:"Enalapril",tags:["ACE inhibitor"],opts:{
+"htn":{label:"Hypertension / heart failure",p:[0.08, 0.58, 40, "q24h", "start low; pediatric dose individualized"],a:["2.5–5 mg", "q24h then titrate", "renal/K+ monitoring"]}
+}};
+D["lisinopril"]={name:"Lisinopril",tags:["ACE inhibitor"],opts:{
+"htn":{label:"Hypertension",p:[0.07, 0.6, 40, "q24h", "pediatric dose indication dependent"],a:["5–40 mg", "q24h", "renal/K+ monitoring"]}
+}};
+D["losartan"]={name:"Losartan",tags:["ARB"],opts:{
+"htn":{label:"Hypertension",p:[0.7, 1.4, 100, "q24h", "pediatric dose indication dependent"],a:["25–100 mg", "q24h", "renal/K+ monitoring"]}
+}};
+D["amlodipine"]={name:"Amlodipine",tags:["Calcium-channel blocker"],opts:{
+"htn":{label:"Hypertension",p:[0.05, 0.1, 10, "q24h", "0.05–0.1 mg/kg/day"],a:["5–10 mg", "q24h", "titrate"]}
+}};
+D["atenolol"]={name:"Atenolol",tags:["Beta blocker"],opts:{
+"htn":{label:"Hypertension / selected cardiac indication",p:[0.5, 1, 100, "q24h", "pediatric use indication-specific"],a:["25–100 mg", "q24h", "renal adjustment may be needed"]}
+}};
+D["propranolol"]={name:"Propranolol",tags:["Beta blocker"],opts:{
+"common":{label:"Selected cardiovascular indications",p:[0.5, 1, 160, "q6–8h", "highly indication dependent"],a:["10–40 mg", "q6–8h", "indication dependent"]}
+}};
+D["digoxin"]={name:"Digoxin",tags:["Cardiac glycoside", "High-risk"],opts:{
+"maintenance":{label:"Maintenance therapy",p:[0.003, 0.01, 0.25, "q24h", "highly individualized"],a:["0.0625–0.25 mg", "q24h", "renal adjustment and serum level may be required"]}
+}};
+D["aspirin"]={name:"Aspirin",tags:["Antiplatelet", "NSAID"],opts:{
+"antiplatelet":{label:"Antiplatelet",p:[0, 0, 100, "q24h", "pediatric use is indication-specific"],a:["75–100 mg", "q24h", "indication dependent"]},
+"acute":{label:"Selected acute cardiovascular indication",p:[0, 0, 325, "single/then protocol", "adult emergency protocol"],a:["160–325 mg", "single/then protocol", "adult emergency protocol"]}
+}};
+D["clopidogrel"]={name:"Clopidogrel",tags:["Antiplatelet"],opts:{
+"antiplatelet":{label:"Antiplatelet",p:[0, 0, 75, "q24h", "pediatric dosing specialist/protocol based"],a:["75 mg", "q24h", "loading indication-specific"]}
+}};
+D["warfarin"]={name:"Warfarin",tags:["Anticoagulant", "High-risk"],opts:{
+"maintenance":{label:"Maintenance anticoagulation",p:[0, 0, 10, "q24h", "do not auto-dose children; INR protocol"],a:["2–5 mg initial", "q24h", "must be individualized to INR"]}
+}};
+D["enoxaparin"]={name:"Enoxaparin",tags:["LMWH", "Anticoagulant", "High-risk"],opts:{
+"vte":{label:"VTE treatment",p:[1, 1, 100, "q12h", "1 mg/kg/dose; pediatric specialist protocol"],a:["1 mg/kg", "q12h", "renal/indication dependent"]},
+"prophylaxis":{label:"VTE prophylaxis",p:[0.5, 0.5, 60, "q12h", "protocol/age dependent"],a:["40 mg", "q24h", "renal/indication dependent"]}
+}};
+D["heparin"]={name:"Unfractionated Heparin",tags:["Anticoagulant", "High-risk"],opts:{
+"vte":{label:"Therapeutic anticoagulation",p:[75, 80, 5000, "bolus then infusion", "use weight/aPTT/anti-Xa nomogram"],a:["5,000–10,000 units bolus", "then infusion", "institutional nomogram"]}
+}};
+D["omeprazole"]={name:"Omeprazole",tags:["PPI"],opts:{
+"common":{label:"GERD / acid-related disease",p:[0.7, 1, 40, "q24h", "~0.7–1 mg/kg/day"],a:["20–40 mg", "q24h", "indication dependent"]}
+}};
+D["pantoprazole"]={name:"Pantoprazole",tags:["PPI"],opts:{
+"common":{label:"Acid-related disease",p:[1, 1, 40, "q24h", "pediatric dose/age restrictions vary"],a:["40 mg", "q24h", "indication dependent"]}
+}};
+D["famotidine"]={name:"Famotidine",tags:["H2 blocker"],opts:{
+"common":{label:"Acid-related disease",p:[0.5, 1, 40, "q12–24h", "0.5–1 mg/kg/day"],a:["20 mg", "q12h", "renal adjustment required"]}
+}};
+D["metoclopramide"]={name:"Metoclopramide (Plasil)",tags:["Antiemetic", "High-risk"],opts:{
+"nausea":{label:"Nausea / vomiting",p:[0.1, 0.1, 10, "q6–8h", "0.1 mg/kg/dose; max 0.5 mg/kg/day; short duration"],a:["10 mg", "q6–8h", "short duration; age/indication restrictions"]}
+}};
+D["ondansetron"]={name:"Ondansetron",tags:["Antiemetic"],opts:{
+"nausea":{label:"Nausea / vomiting",p:[0.15, 0.15, 8, "q8–12h or single dose", "0.15 mg/kg/dose"],a:["4–8 mg", "q8–12h or single dose", "indication dependent"]}
+}};
+D["dexamethasone"]={name:"Dexamethasone",tags:["Corticosteroid"],opts:{
+"general":{label:"General inflammatory/allergic condition",p:[0.02,0.3,9,"q6–24h / divided","0.02–0.3 mg/kg/day; indication dependent"],a:["0.75–9 mg/day","q24h or divided","adult initial dose is indication dependent"]},
+"croup":{label:"Croup — pediatric pathway",p:[0.15,0.6,12,"single dose","0.15–0.6 mg/kg once; common severe-croup option 0.6 mg/kg; max 12 mg"],a:["Not a routine adult regimen","—","use indication-specific adult guidance"]},
+"meningitis":{label:"Bacterial meningitis adjunct",p:[0.15,0.15,10,"q6h","0.15 mg/kg/dose q6h; timing with antibiotics is important"],a:["10 mg","q6h","adult meningitis adjunct regimen; follow local protocol"]},
+"cerebral":{label:"Cerebral edema / raised intracranial pressure",p:[0.2,0.2,16,"divided / specialist protocol","~0.2 mg/kg/day is a reference framework; specialist regimen required"],a:["10 mg IV initially, then 4 mg","q6h","titrate to clinical response; taper/withdrawal depends on duration and indication"]}
+}};
+D["hydrocortisone"]={name:"Hydrocortisone",tags:["Corticosteroid"],opts:{
+"adrenal":{label:"Adrenal crisis / stress dosing",p:[25, 50, 100, "q6h or protocol", "stress-dose regimen"],a:["100 mg IV", "then q6–8h/protocol", "emergency protocol"]}
+}};
+D["prednisolone"]={name:"Prednisolone",tags:["Corticosteroid"],opts:{
+"general":{label:"Inflammatory/allergic condition",p:[0.5, 2, 60, "q24h or divided", "0.5–2 mg/kg/day"],a:["5–60 mg/day", "q24h or divided", "indication dependent"]}
+}};
+D["diazepam"]={name:"Diazepam",tags:["Benzodiazepine", "High-risk"],opts:{
+"seizure":{label:"Acute seizure",p:[0.15, 0.3, 10, "slow IV/rectal; repeat per protocol", "0.15–0.3 mg/kg/dose"],a:["5–10 mg", "slow IV/rectal", "emergency protocol"]}
+}};
+D["lorazepam"]={name:"Lorazepam",tags:["Benzodiazepine", "High-risk"],opts:{
+"seizure":{label:"Status epilepticus",p:[0.1, 0.1, 4, "IV once; repeat per protocol", "0.1 mg/kg/dose"],a:["4 mg IV", "once; repeat per protocol", "airway/respiratory monitoring"]}
+}};
+D["levetiracetam"]={name:"Levetiracetam",tags:["Anticonvulsant"],opts:{
+"seizure":{label:"Seizure treatment",p:[10, 20, 1500, "q12h", "10–20 mg/kg/dose; titrate"],a:["500–1500 mg", "q12h", "renal adjustment required"]}
+}};
+D["phenytoin"]={name:"Phenytoin",tags:["Anticonvulsant", "High-risk"],opts:{
+"loading":{label:"Loading for seizure/status",p:[15, 20, 1500, "once", "15–20 mg/kg loading"],a:["15–20 mg/kg", "once", "ECG/BP and serum levels"]},
+"maintenance":{label:"Maintenance",p:[4, 8, 500, "q12–24h", "4–8 mg/kg/day"],a:["300–400 mg/day", "divided", "serum-level guided"]}
+}};
+D["phenobarbital"]={name:"Phenobarbital",tags:["Anticonvulsant", "High-risk"],opts:{
+"loading":{label:"Seizure loading",p:[15, 20, 1000, "once", "15–20 mg/kg loading"],a:["10–20 mg/kg", "once", "specialist/emergency protocol"]},
+"maintenance":{label:"Maintenance",p:[3, 5, 300, "q24h", "3–5 mg/kg/day"],a:["60–180 mg/day", "q24h", "individualize"]}
+}};
+D["gabapentin"]={name:"Gabapentin",tags:["Anticonvulsant", "Neuropathic pain"],opts:{
+"neuropathic":{label:"Neuropathic pain / seizure",p:[10, 30, 3600, "divided 2–3 times/day", "titrate gradually"],a:["300–600 mg", "q8h", "renal adjustment required"]}
+}};
+D["fluoxetine"]={name:"Fluoxetine",tags:["SSRI"],opts:{
+"depression":{label:"Depression / selected anxiety disorders",p:[0.2, 0.5, 40, "q24h", "pediatric specialist use"],a:["20 mg", "q24h", "titrate"]}
+}};
+D["sertraline"]={name:"Sertraline",tags:["SSRI"],opts:{
+"depression":{label:"Depression / anxiety disorders",p:[0, 0, 200, "q24h", "pediatric dose is age/indication specific"],a:["25–50 mg", "q24h", "titrate"]}
+}};
+D["haloperidol"]={name:"Haloperidol",tags:["Antipsychotic", "High-risk"],opts:{
+"agitation":{label:"Acute agitation / psychosis",p:[0, 0, 10, "q4–8h PRN", "pediatric use requires specialist protocol"],a:["1–5 mg", "q4–8h PRN", "QT/EPS risk"]}
+}};
+D["metformin"]={name:"Metformin",tags:["Antidiabetic"],opts:{
+"t2dm":{label:"Type 2 diabetes",p:[0, 0, 2000, "q12–24h", "not routine pediatric calculation here"],a:["500 mg", "q12h with food then titrate", "renal eligibility required"]}
+}};
+D["insulin-regular"]={name:"Regular (Soluble) Insulin",tags:["Insulin", "High-risk"],opts:{
+"dka":{label:"DKA IV infusion",p:[0.05, 0.1, 20, "units/kg/hour IV infusion", "use DKA protocol"],a:["0.1 units/kg/hour", "IV infusion", "institutional DKA protocol"]},
+"sc":{label:"Subcutaneous regimen",p:[0.1, 0.2, 20, "protocol dependent", "individualized total daily requirement"],a:["individualized", "protocol dependent", "do not auto-prescribe"]}
+}};
+D["insulin-nph"]={name:"NPH Insulin",tags:["Insulin", "High-risk"],opts:{
+"basal":{label:"Basal insulin",p:[0.2, 0.6, 50, "q12–24h", "individualized; glucose monitoring required"],a:["individualized", "q12–24h", "individualize"]}
+}};
+D["glibenclamide"]={name:"Glibenclamide (Glyburide)",tags:["Sulfonylurea"],opts:{
+"t2dm":{label:"Type 2 diabetes",p:[0, 0, 20, "q24h", "adult use; hypoglycemia risk"],a:["2.5–5 mg", "q24h", "renal/age risk"]}
+}};
+D["allopurinol"]={name:"Allopurinol",tags:["Urate-lowering"],opts:{
+"gout":{label:"Gout / hyperuricemia",p:[0, 0, 300, "q24h", "adult starting/titration"],a:["100 mg start", "q24h then titrate", "renal adjustment required"]}
+}};
+D["colchicine"]={name:"Colchicine",tags:["Gout"],opts:{
+"acute":{label:"Acute gout",p:[0, 0, 1.2, "then 0.6 mg 1h later", "adult regimen"],a:["1.2 mg", "then 0.6 mg 1 hour later", "renal/drug interaction limits"]}
+}};
+D["ferrous-sulfate"]={name:"Ferrous Sulfate",tags:["Iron"],opts:{
+"iron":{label:"Iron deficiency anemia",p:[3, 6, 325, "q24h–divided", "3–6 mg/kg/day elemental iron"],a:["elemental iron 60–120 mg/day", "q24h or divided", "dose expressed as elemental iron"]}
+}};
+D["folic-acid"]={name:"Folic Acid",tags:["Vitamin"],opts:{
+"deficiency":{label:"Folate deficiency",p:[0.05, 0.1, 5, "q24h", "age dependent"],a:["1–5 mg", "q24h", "indication dependent"]}
+}};
+D["vitamin-d"]={name:"Vitamin D (Cholecalciferol)",tags:["Vitamin"],opts:{
+"maintenance":{label:"Adult maintenance / supplementation",p:[0,0,0,"q24h","fixed-dose; not weight-based"],a:["800–2000 IU","q24h","Use the lower end for routine supplementation; individualize to age, diet, 25(OH)D status and clinical indication"]},
+"deficiency":{label:"Adult vitamin D deficiency — repletion",p:[0,0,0,"once weekly","50,000 IU once weekly for 8 weeks; then maintenance 1500–2000 IU/day"],a:["50,000 IU","once weekly for 8 weeks","After repletion, transition to maintenance; monitor/reassess according to clinical context"]},
+"pediatric-deficiency":{label:"Pediatric vitamin D deficiency — repletion",p:[0,0,0,"daily or once weekly","2,000 IU/day or 50,000 IU once weekly for at least 6 weeks; age-specific maintenance thereafter"],a:["2,000 IU/day or 50,000 IU once weekly","age/protocol dependent","Use pediatric age-specific guidance and reassess 25(OH)D when indicated"]}
+}};
+D["artemether-lumefantrine"]={name:"Artemether/Lumefantrine",tags:["Antimalarial"],opts:{
+"malaria":{label:"Uncomplicated falciparum malaria",p:[0, 0, 0, "weight-band regimen", "use current Ethiopian malaria weight-band regimen"],a:["weight-band regimen", "per national protocol", "do not substitute generic mg/kg"]}
+}};
+D["artesunate"]={name:"Artesunate",tags:["Antimalarial", "Emergency"],opts:{
+"severe-ped-under20":{label:"Severe malaria — child <20 kg",p:[3,3,60,"IV/IM at 0,12,24h then daily","3 mg/kg/dose; WHO weight-specific pediatric dose"],a:["3 mg/kg/dose","IV/IM at 0,12,24h then daily","Children weighing <20 kg receive 3 mg/kg/dose"]},
+"severe-ped-20plus":{label:"Severe malaria — child ≥20 kg",p:[2.4,2.4,240,"IV/IM at 0,12,24h then daily","2.4 mg/kg/dose"],a:["2.4 mg/kg/dose","IV/IM at 0,12,24h then daily","Children weighing ≥20 kg use the 2.4 mg/kg/dose regimen"]},
+"severe-adult":{label:"Severe malaria — adult",p:[0,0,0,"IV/IM at 0,12,24h then daily","2.4 mg/kg/dose"],a:["2.4 mg/kg/dose","IV/IM at 0,12,24h then daily","Continue parenteral therapy for at least 24 h and until oral therapy is tolerated; then complete an appropriate oral ACT course per malaria protocol"]}
+}};
+D["rifampicin"]={name:"Rifampicin",tags:["Anti-TB"],opts:{
+"tb":{label:"Tuberculosis regimen",p:[10, 15, 600, "q24h", "use national TB weight-band regimen"],a:["weight-band regimen", "q24h", "follow current Ethiopian TB guideline"]}
+}};
+D["isoniazid"]={name:"Isoniazid",tags:["Anti-TB"],opts:{
+"tb":{label:"Tuberculosis regimen",p:[7, 10, 300, "q24h", "use national TB weight-band regimen"],a:["weight-band regimen", "q24h", "follow current Ethiopian TB guideline"]}
+}};
+D["pyrazinamide"]={name:"Pyrazinamide",tags:["Anti-TB"],opts:{
+"tb":{label:"Tuberculosis regimen",p:[20, 30, 2000, "q24h", "use national TB weight-band regimen"],a:["weight-band regimen", "q24h", "follow current Ethiopian TB guideline"]}
+}};
+D["ethambutol"]={name:"Ethambutol",tags:["Anti-TB"],opts:{
+"tb":{label:"Tuberculosis regimen",p:[15, 20, 1600, "q24h", "use national TB weight-band regimen; visual monitoring"],a:["weight-band regimen", "q24h", "follow current Ethiopian TB guideline"]}
+}};
+D["salbutamol"]={name:"Salbutamol (Albuterol)",tags:["Bronchodilator"],opts:{
+"acute":{label:"Acute bronchospasm",p:[0.1, 0.15, 5, "nebulized q4–6h PRN", "device/formulation dependent"],a:["2.5–5 mg nebulized", "q4–6h PRN", "acute protocol"]}
+}};
+D["epinephrine"]={name:"Epinephrine (Adrenaline)",tags:["Emergency", "High-risk"],opts:{
+"anaphylaxis":{label:"Anaphylaxis IM",p:[0.01, 0.01, 0.5, "IM q5–15min PRN", "0.01 mg/kg of 1 mg/mL; max 0.5 mg"],a:["0.5 mg IM", "q5–15min PRN", "use 1 mg/mL for IM anaphylaxis"]},
+"arrest":{label:"Cardiac arrest",p:[0.01, 0.01, 1, "IV/IO q3–5min", "0.01 mg/kg of 0.1 mg/mL; max 1 mg"],a:["1 mg IV/IO", "q3–5min", "resuscitation protocol"]}
+}};
+D["atropine"]={name:"Atropine",tags:["Emergency"],opts:{
+"brady":{label:"Symptomatic bradycardia",p:[0.02, 0.02, 0.5, "IV/IO repeat per protocol", "minimum pediatric dose rules apply"],a:["1 mg IV", "repeat per ACLS protocol", "adult max 3 mg total"]}
+}};
+D["adenosine"]={name:"Adenosine",tags:["Emergency"],opts:{
+"svt":{label:"Regular narrow-complex SVT",p:[0.1, 0.2, 12, "rapid IV push then flush", "pediatric initial 0.1 mg/kg"],a:["6 mg", "rapid IV push; may repeat 12 mg", "ACLS protocol"]}
+}};
+D["magnesium-sulfate"]={name:"Magnesium Sulfate (MgSO4)",tags:["Electrolyte", "Obstetric", "Emergency", "High-risk"],opts:{
+"eclampsia":{label:"Severe pre-eclampsia / eclampsia — Ethiopian IM/IV regimen",p:[0, 0, 0, "loading + maintenance", "20% and 50% solutions; protocol-specific"],a:["Loading: 4 g IV of 20% solution over 5 min, then 10 g of 50% solution IM (5 g in each buttock) with 1 mL 2% lidocaine in each syringe; if convulsion recurs after 15 min, give 2 g of 20% MgSO4 IV over 5 min. Maintenance: 5 g of 50% MgSO4 IM + 1 mL 2% lidocaine every 4 h in alternate buttocks for 24 h after delivery or the last convulsion, whichever is later.","Every 4 h after loading","Monitor patellar reflexes, respiratory rate and urine output; stop for absent reflexes, RR <16/min or significant oliguria; calcium gluconate 10% 10 mL IV slowly is the antidote for clinically significant toxicity"]},
+"eclampsia-iv":{label:"Severe pre-eclampsia / eclampsia — IV regimen",p:[0, 0, 0, "IV loading + infusion", "use infusion-pump/close-monitoring protocol"],a:["4 g IV loading; then 1 g/hour IV maintenance until 24 h after delivery or last convulsion, according to the selected IV protocol","continuous IV infusion","Use only where continuous monitoring and infusion capability are available; check reflexes, respiratory rate and urine output"]},
+"recurrent-seizure":{label:"Recurrent eclamptic seizure after loading dose",p:[0, 0, 2000, "IV once", "2 g of 20% solution over 5 min if seizure recurs after 15 min"],a:["2 g IV", "once over 5 min", "Ethiopian obstetric protocol; reassess airway, BP, oxygenation and magnesium toxicity"]},
+"asthma":{label:"Acute severe / life-threatening asthma adjunct",p:[25, 50, 2000, "IV once over 20 min", "25–50 mg/kg; max 2 g; selected severe cases after initial bronchodilator/corticosteroid therapy"],a:["Adults: 2 g IV; Children: 25–50 mg/kg IV (max 2 g)","single dose over 20 min","Consider only for severe/life-threatening exacerbation with inadequate response to initial therapy; repeated doses are not routinely recommended"]},
+"hypomagnesemia":{label:"Symptomatic or significant hypomagnesemia",p:[25, 50, 2000, "IV/IM protocol", "dose depends on severity, serum Mg, renal function and symptoms"],a:["Protocol-based IV/IM replacement","protocol dependent","Use measured serum magnesium, renal function and local electrolyte-replacement protocol; slower IV administration for non-emergency replacement"]}
+}};
+D["calcium-gluconate"]={name:"Calcium Gluconate",tags:["Electrolyte", "Emergency"],opts:{
+"hyperk":{label:"Hyperkalemia with ECG changes",p:[60, 100, 3000, "IV per emergency protocol", "dose/concentration dependent"],a:["1–3 g", "IV per emergency protocol", "ECG monitoring"]}
+}};
+D["potassium-chloride"]={name:"Potassium Chloride",tags:["Electrolyte", "High-risk"],opts:{
+"hypokalemia":{label:"Hypokalemia",p:[1, 2, 40, "oral/IV protocol", "IV rate/concentration must follow local protocol"],a:["20–40 mEq", "oral/IV protocol", "ECG monitoring for IV"]}
+}};
+D["mannitol"]={name:"Mannitol",tags:["Osmotic diuretic", "Emergency"],opts:{
+"raisedicp":{label:"Raised intracranial pressure",p:[0.25, 1, 100, "IV q4–6h PRN", "0.25–1 g/kg"],a:["0.25–1 g/kg", "IV q4–6h PRN", "specialist/neurocritical protocol"]}
+}};
+D["labetalol"]={name:"Labetalol",tags:["Antihypertensive", "Emergency"],opts:{
+"severe":{label:"Severe hypertension / emergency",p:[0, 0, 80, "IV protocol", "pediatric emergency dosing specialist based"],a:["20 mg IV then titrate", "protocol dependent", "monitor BP/HR"]}
+}};
+D["hydralazine"]={name:"Hydralazine",tags:["Antihypertensive", "Obstetric"],opts:{
+"severe":{label:"Severe hypertension in pregnancy",p:[0, 0, 20, "IV/IM protocol", "pediatric use specialist based"],a:["5–10 mg IV", "repeat per protocol", "obstetric protocol"]}
+}};
+D["methyldopa"]={name:"Methyldopa",tags:["Antihypertensive", "Obstetric"],opts:{
+"htn":{label:"Hypertension in pregnancy",p:[10, 20, 3000, "q8–12h", "pediatric use indication-specific"],a:["250 mg", "q8h", "titrate"]}
+}};
+D["nifedipine"]={name:"Nifedipine",tags:["Calcium-channel blocker", "Obstetric"],opts:{
+"htn":{label:"Hypertension / selected obstetric indication",p:[0, 0, 120, "q24h", "pediatric formulation-specific"],a:["30 mg extended release", "q24h", "titrate"]}
+}};
+D["ferrous-folate"]={name:"Iron + Folic Acid",tags:["Hematininic", "Obstetric"],opts:{
+"pregnancy":{label:"Pregnancy supplementation",p:[0, 0, 0, "per national ANC protocol", "use exact product elemental iron/folate content"],a:["per national ANC protocol", "q24h", "product-strength dependent"]}
+}};
+
+function norm(s){
+  return (s||"").trim().toLowerCase()
+    .replace(/[\u2013\u2014]/g,"-")
+    .replace(/\s+/g," ")
+    .replace(/[\(\)\/+]/g," ")
+    .replace(/\s+/g," ");
+}
+function keyFor(input){
+  const raw=(input||"").trim(), n=norm(raw);
+  if(D[raw]) return raw;
+  if(D[n]) return n;
+  const keys=Object.keys(D);
+  return keys.find(k=>norm(D[k].name)===n) ||
+         keys.find(k=>norm(D[k].name).startsWith(n)) ||
+         keys.find(k=>norm(k)===n) ||
+         null;
+}
+function populate(){
+  const dl=document.getElementById("druglist");
+  if(dl) dl.innerHTML=Object.values(D).map(x=>`<option value="${x.name}">`).join("");
+  renderDrugSuggestions("");
+}
+
+let drugSuggestionIndex=-1;
+
+function getDrugSuggestions(query=""){
+  const q=norm(query);
+  const items=Object.entries(D).map(([key,x])=>({key,name:x.name,tags:x.tags||[]}));
+  if(!q) return items;
+  const starts=[], contains=[];
+  for(const item of items){
+    const n=norm(item.name), tags=norm(item.tags.join(" "));
+    if(n.startsWith(q)) starts.push(item);
+    else if(n.includes(q)||tags.includes(q)) contains.push(item);
+  }
+  return starts.concat(contains);
+}
+
+function renderDrugSuggestions(query=""){
+  const box=document.getElementById("drugSuggestions");
+  const input=document.getElementById("drug");
+  if(!box||!input) return;
+  const items=getDrugSuggestions(query);
+  drugSuggestionIndex=-1;
+  if(!items.length){
+    box.innerHTML='<div class="drug-empty">No matching medicine found.</div>';
+    box.classList.remove("hidden");
+    input.setAttribute("aria-expanded","true");
+    return;
+  }
+  box.innerHTML=items.map((item,i)=>`
+    <button type="button" class="drug-suggestion" role="option" data-key="${item.key}" data-index="${i}">
+      <span>${item.name}</span><span class="drug-tag">${item.tags.slice(0,2).join(" • ")}</span>
+    </button>`).join("");
+  box.classList.remove("hidden");
+  input.setAttribute("aria-expanded","true");
+  box.querySelectorAll(".drug-suggestion").forEach(btn=>{
+    btn.addEventListener("mousedown",e=>e.preventDefault());
+    btn.addEventListener("click",()=>{
+      const key=btn.dataset.key;
+      selectDrug(key);
+    });
+  });
+}
+
+function selectDrug(key){
+  if(!D[key]) return;
+  const input=document.getElementById("drug");
+  input.value=D[key].name;
+  closeDrugSuggestions();
+  showOptions();
+  input.focus();
+}
+
+function closeDrugSuggestions(){
+  const box=document.getElementById("drugSuggestions");
+  const input=document.getElementById("drug");
+  if(box) box.classList.add("hidden");
+  if(input) input.setAttribute("aria-expanded","false");
+  drugSuggestionIndex=-1;
+}
+
+function moveDrugSuggestion(delta){
+  const box=document.getElementById("drugSuggestions");
+  if(!box||box.classList.contains("hidden")) return;
+  const items=[...box.querySelectorAll(".drug-suggestion")];
+  if(!items.length) return;
+  drugSuggestionIndex=(drugSuggestionIndex+delta+items.length)%items.length;
+  items.forEach((el,i)=>el.classList.toggle("active",i===drugSuggestionIndex));
+  items[drugSuggestionIndex].scrollIntoView({block:"nearest"});
+}
+
+function chooseHighlightedDrug(){
+  const box=document.getElementById("drugSuggestions");
+  const items=box?[...box.querySelectorAll(".drug-suggestion")]:[];
+  if(drugSuggestionIndex>=0 && items[drugSuggestionIndex]){
+    selectDrug(items[drugSuggestionIndex].dataset.key);
+    return true;
+  }
+  const k=keyFor(document.getElementById("drug").value);
+  if(k){selectDrug(k);return true;}
+  return false;
+}
+
+function showOptions(){
+  const input=document.getElementById("drug");
+  const box=document.getElementById("drugOptions");
+  const k=keyFor(input.value);
+  if(!k){box.classList.add("hidden");box.innerHTML="";updateSourceInfo();return}
+  const opts=D[k].opts, keys=Object.keys(opts);
+  const oldCtx=document.getElementById("ctx")?.value;
+  const selected=oldCtx && opts[oldCtx] ? oldCtx : keys[0];
+  box.classList.remove("hidden");
+  box.innerHTML=`<label>Indication / dosing option for ${D[k].name}</label>
+    <select id="ctx">${keys.map(x=>`<option value="${x}" ${x===selected?'selected':''}>${opts[x].label}</option>`).join("")}</select>
+    <p class="small"><b>FUNCTIONAL:</b> changing this option changes the dosing pathway used by the calculation engine.</p>
+    ${k==="amoxicillin-clavulanate"?`<div class="warn"><b>Augmentin formulation alert:</b> Pediatric doses are expressed as the <b>amoxicillin component</b>. For conventional 228/5 mL or 457/5 mL products, Ethiopian product information gives 25/3.6–45/6.4 mg/kg/day for mild–moderate infection and 45/6.4–70/10 mg/kg/day for more serious infection, divided every 12 hours. The high-dose 90 mg/kg/day pathway is for an appropriate <b>14:1</b> formulation (e.g. 600/42.9 mg per 5 mL), not a generic dose for every Augmentin product.</div>`:""}`;
+  document.getElementById("ctx").addEventListener("change",()=>{
+    updateSourceInfo();
+    if(document.getElementById("weight").value) calculate();
+  });
+  updateSourceInfo();
+}
+
+function renal(age,w,h,scr,sex){
+  if(!Number.isFinite(scr)||scr<=0) return {txt:"Creatinine blank → no automatic renal adjustment applied.",crcl:null,egfr:null};
+  if(age!==null && age>=18){
+    if(!w)return {txt:"Adult renal estimate requires weight.",crcl:null,egfr:null};
+    let cr=((140-age)*w)/(72*scr);
+    if(sex==="female") cr*=0.85;
+    return {crcl:cr,egfr:null,txt:`Estimated Cockcroft–Gault CrCl ≈ ${cr.toFixed(1)} mL/min.`};
+  }
+  if(age!==null && age>0 && h>0){
+    const e=.413*h/scr;
+    return {crcl:null,egfr:e,txt:`Bedside Schwartz eGFR ≈ ${e.toFixed(1)} mL/min/1.73m².`};
+  }
+  return {crcl:null,egfr:null,txt:"Renal estimate requires age + height + creatinine for children, or age + weight + creatinine for adults."};
+}
+const renalKeys=new Set(["cefixime","ceftazidime","cefepime","piperacillin-tazobactam","meropenem","ertapenem","ciprofloxacin","levofloxacin","clarithromycin","vancomycin","gentamicin","amikacin","fluconazole","acyclovir","furosemide","famotidine","gabapentin","enoxaparin","heparin","digoxin","allopurinol","metformin","ibuprofen","diclofenac","naproxen","amoxicillin-clavulanate"]);
+function renalAdvice(k,r){
+  if(!renalKeys.has(k)) return " No automatic creatinine-based substitution is programmed for this medicine; assess renal/hepatic status and the current monograph when clinically relevant.";
+  if(r.crcl===null && r.egfr===null) return " Renal adjustment is relevant; enter creatinine when clinically appropriate.";
+  if(["vancomycin","gentamicin","amikacin"].includes(k)) return " RENAL/TDM: use institutional renal dosing and therapeutic drug monitoring; do not rely on the displayed dose alone.";
+  if(["acyclovir","ceftazidime","cefepime","piperacillin-tazobactam","meropenem","ertapenem","levofloxacin","ciprofloxacin","fluconazole","gabapentin","enoxaparin","famotidine","digoxin","allopurinol"].includes(k)) return " Renal adjustment may be required. Select the exact route/indication and consult the current renal dosing table before administration.";
+  if(["ibuprofen","diclofenac","naproxen"].includes(k)) return " Renal impairment is a safety issue; dose reduction does not make NSAIDs safe in significant AKI/advanced CKD.";
+  if(k==="metformin") return " Metformin eligibility/dose depends on eGFR; do not use in severe renal impairment and follow current guideline.";
+  return " Review current renal dosing guidance.";
+}
+function formatDose(dose,decimals=1){
+  if(!Number.isFinite(dose)) return "—";
+  const rounded=decimals===0?Math.round(dose):Math.round(dose*10**decimals)/10**decimals;
+  return rounded.toLocaleString(undefined,{maximumFractionDigits:decimals});
+}
+function getSource(){return document.getElementById("source")?.value||"ethiopia";}
+function sourceLabel(src){
+  return src==="nelson"?"Nelson Textbook of Pediatrics":
+         src==="harrison"?"Harrison's Principles of Internal Medicine":
+         src==="gabbe"?"Gabbe's Obstetrics, 9th edition":
+         src==="williams"?"Williams Obstetrics, 26th edition":
+         src==="obgyn"?"Gabbe 9e + Williams 26e + Ethiopian obstetric/national protocol":
+         src==="eml"?"Ethiopian Essential Medicines List, 7th edition (2024)":
+         "Ethiopian STG / National Protocol";
+}
+function sourceApplicability(k,age,ctx){
+  const tags=(D[k].tags||[]).join(" ").toLowerCase();
+  const label=(D[k].opts[ctx]?.label||"").toLowerCase();
+  if(getSource()==="nelson"&&age!==null&&age>=18)
+    return "Nelson is primarily a pediatric reference; for an adult patient, verify the adult regimen against an adult reference.";
+  if(getSource()==="harrison"&&age!==null&&age<18)
+    return "Harrison is primarily an adult/internal-medicine reference; for a child, verify the pediatric regimen against Nelson or a pediatric protocol.";
+  if((getSource()==="gabbe"||getSource()==="williams"||getSource()==="obgyn")&&!/(pregnancy|obstetric|gynec|labor|postpartum|preterm|eclampsia|pph|contracept|vaginal|antenatal)/.test(label+" "+tags))
+    return "Gabbe/Williams are obstetric references; for non-obstetric medicines verify against the Ethiopian STG and the applicable specialty reference.";
+  if(getSource()==="eml")
+    return "The EML is primarily a medicines-selection/availability reference; dosing should come from the applicable Ethiopian STG, national program guideline or product information.";
+  if(getSource()==="ethiopia"&&/(malaria|tb|pregnancy|eclampsia|anaphylaxis|dka|arrest|obstetric|pph)/.test(label+" "+tags))
+    return "This indication may be governed by a disease-specific Ethiopian national protocol. Check the current national edition before administration.";
+  return "Reference framework selected. Check the exact current source, indication, formulation and route before administration.";
+}
+
+/* The database stores p=[low,high,max,frequency,expression].
+   Interpretation rule:
+   - explicit mg/kg/dose (or 'per dose') wins over '/day'
+   - otherwise '/day' means total daily dose
+   - '/hour' means hourly dose/rate
+   This fixes regimens such as ceftriaxone where the expression contains both daily
+   and per-dose wording. */
+function doseBasis(expr){
+  const e=(expr||"").toLowerCase();
+  if(/\/kg\/dose|\/dose|per dose|mg\/kg\/dose|units\/kg\/dose/.test(e)) return "dose";
+  if(/\/hour|per hour|hourly|units\/kg\/hour/.test(e)) return "hourly";
+  if(/\/day|per day|daily|units\/kg\/day|iu\/kg\/day/.test(e)) return "daily";
+  return "dose";
+}
+function unitFromExpr(expr){
+  const e=(expr||"").toLowerCase();
+  if(/\bunits?\b/.test(e)) return "units";
+  if(/\biu\b/.test(e)) return "IU";
+  if(/\bmcg\b|\bµg\b/.test(e)) return "mcg";
+  if(/\bg\/kg\b|\bg\/day\b|\bg\/dose\b/.test(e)) return "g";
+  return "mg";
+}
+function parseFrequencyDivisor(freq){
+  const f=(freq||"").toLowerCase();
+  if(/q24h|once daily|daily|q24/.test(f)) return 1;
+  if(/q12h|bid/.test(f)) return 2;
+  if(/q8h|tid/.test(f)) return 3;
+  if(/q6h|qid/.test(f)) return 4;
+  if(/q4h/.test(f)) return 6;
+  return null;
+}
+function maxFor(path,amount){
+  if(!Number.isFinite(path.max)||path.max<=0) return {amount,wasCapped:false};
+  const capped=Math.min(amount,path.max);
+  return {amount:capped,wasCapped:capped<amount};
+}
+function getPath(k,ctx,age,mode,w){
+  const o=D[k].opts[ctx];
+  if(!o) return null;
+  const adult=mode==="adult" || (mode==="auto"&&age!==null&&age>=18);
+  const ped=mode==="ped" || (mode==="auto"&&age!==null&&age<18);
+
+  if(adult){
+    const a=o.a||[];
+    const txt=a[0]||"Protocol / reference";
+    const parsed=parseAdultDose(txt);
+    return {pop:"ADULT",doseText:txt,freq:a[1]||"—",expr:a[2]||"—",
+            numeric:parsed.numeric,lo:parsed.lo,hi:parsed.hi,unit:parsed.unit,
+            basis:"fixed",max:null,maxWasCapped:false,adult:true};
+  }
+  if(ped){
+    const p=o.p||[];
+    const expr=p[4]||"", unit=unitFromExpr(expr), basis=doseBasis(expr);
+    const loRate=Number(p[0]), hiRate=Number(p[1]), max=Number(p[2]);
+    if(!Number.isFinite(loRate)||!Number.isFinite(hiRate)||loRate===0&&hiRate===0)
+      return {pop:"PEDIATRIC",doseText:"Protocol / specialist reference",freq:p[3]||"—",expr,
+              numeric:null,lo:null,hi:null,unit,basis,max:null,maxWasCapped:false};
+    const rawLo=loRate*w, rawHi=hiRate*w, same=loRate===hiRate;
+    const divisor=parseFrequencyDivisor(p[3]);
+    let lo=rawLo,hi=rawHi,maxApplied=false, displayUnit=unit;
+    if(basis==="dose"){
+      const x=maxFor({max},lo); lo=x.amount; maxApplied|=x.wasCapped;
+      const y=maxFor({max},hi); hi=y.amount; maxApplied|=y.wasCapped;
+    } else if(basis==="daily"){
+      const x=maxFor({max},lo); lo=x.amount; maxApplied|=x.wasCapped;
+      const y=maxFor({max},hi); hi=y.amount; maxApplied|=y.wasCapped;
+    } else if(basis==="hourly"){
+      const x=maxFor({max},lo); lo=x.amount; maxApplied|=x.wasCapped;
+      const y=maxFor({max},hi); hi=y.amount; maxApplied|=y.wasCapped;
+    }
+    const numeric=(basis==="dose"&&same)?lo:null;
+    const maxWasCapped=!!maxApplied;
+    let doseText,rangeText;
+    if(basis==="daily"){
+      doseText=`${formatDose(lo)}–${formatDose(hi)} ${displayUnit}/day`;
+      rangeText=`${formatDose(lo)}–${formatDose(hi)} ${displayUnit}/day total`;
+    } else if(basis==="hourly"){
+      doseText=`${formatDose(lo)}–${formatDose(hi)} ${displayUnit}/hour`;
+      rangeText=`${formatDose(lo)}–${formatDose(hi)} ${displayUnit}/hour`;
+    } else {
+      doseText=`${same?formatDose(lo):formatDose(lo)+"–"+formatDose(hi)} ${displayUnit} per dose`;
+      rangeText=`${formatDose(lo)}–${formatDose(hi)} ${displayUnit} per dose`;
+    }
+    return {pop:"PEDIATRIC",doseText,freq:p[3],expr, numeric,lo,hi,unit:displayUnit,basis,
+            divisor,max, maxWasCapped, range:rangeText,
+            defaultNote:(!same?"Select the clinically appropriate point within the programmed range; do not treat the lower end as universally correct.":"")};
+  }
+  return null;
+}
+
+/* Parse simple adult dose text so syrup/tablet conversion also works for adults.
+   Complex mixed-route/protocol text remains non-numeric rather than being guessed. */
+function parseAdultDose(txt){
+  const s=(txt||"").replace(/,/g,"");
+  if(/protocol|individualized|weight-band|not a routine|—/.test(s.toLowerCase()))
+    return {numeric:null,lo:null,hi:null,unit:"mg"};
+  if(/\bIV\b.*\bPO\b|\bPO\b.*\bIV\b/i.test(s))
+    return {numeric:null,lo:null,hi:null,unit:"mg"};
+  const unitMatch=s.match(/\b(mg|g|mcg|µg|IU|units?)\b/i);
+  if(!unitMatch) return {numeric:null,lo:null,hi:null,unit:"mg"};
+  const unit=unitMatch[1].toLowerCase().startsWith("g")&&unitMatch[1].toLowerCase()!=="mcg"?"g":
+             unitMatch[1].toLowerCase().startsWith("unit")?"units":
+             /iu/i.test(unitMatch[1])?"IU":/mcg|µg/i.test(unitMatch[1])?"mcg":"mg";
+  const before=s.slice(0,unitMatch.index);
+  const nums=(before.match(/\d+(?:\.\d+)?/g)||[]).map(Number);
+  if(!nums.length) return {numeric:null,lo:null,hi:null,unit};
+  let lo=nums[0],hi=nums.length>1?nums[1]:nums[0];
+  if(unit==="g"){lo*=1000;hi*=1000;}
+  if(unit==="mcg"){lo/=1000;hi/=1000;}
+  return {numeric:lo===hi?lo:null,lo,hi,unit};
+}
+
+function renderLiquid(k,ctx,r,idPrefix){
+  let lo=null,hi=null,unit=r.unit||"mg", label="";
+  if(r.basis==="dose"){lo=r.lo;hi=r.hi;label="calculated dose";}
+  else if(r.basis==="daily"&&r.divisor){lo=r.lo/r.divisor;hi=r.hi/r.divisor;label=`per-dose estimate from total daily dose ÷ ${r.divisor}`;}
+  else if(r.adult&&r.lo!==null){lo=r.lo;hi=r.hi;label="adult dose";}
+  if(lo===null||hi===null||!["mg","g","mcg","µg","IU","units"].includes(unit)) return "";
+  const safe=idPrefix.replace(/[^a-zA-Z0-9_-]/g,"_");
+  const defaultDose=lo===hi?lo:"";
+  const unitLabel=unit==="mg"?"mg":unit;
+  return `<div class="optionbox" style="margin-top:14px">
+    <label>Oral liquid / syrup conversion <span class="badge">${unitLabel}</span></label>
+    <div class="grid">
+      <div><label>Dose to convert (${unitLabel})</label>
+        <input id="dose_${safe}" type="number" min="0" step="0.01" value="${defaultDose}" placeholder="${lo!==hi?`${formatDose(lo)}–${formatDose(hi)}`:"Calculated dose"}"></div>
+      <div><label>Liquid concentration unit</label>
+        <select id="liqUnit_${safe}"><option value="5">${unitLabel} per 5 mL</option><option value="1">${unitLabel} per 1 mL</option></select></div>
+      <div><label>Concentration</label>
+        <input id="liqConc_${safe}" type="number" min="0" step="0.01" placeholder="e.g. 250"></div>
+    </div>
+    <p class="small">The calculated ${label} is ${lo===hi?formatDose(lo):formatDose(lo)+"–"+formatDose(hi)} ${unitLabel}. Enter the exact bottle concentration. You may edit the dose field when the prescribed dose is a selected point within a range.</p>
+    <button onclick="calcVol2('${safe}',${lo},${hi},'${unitLabel}')">Calculate syrup / oral-liquid volume</button>
+    <div id="vol_${safe}"></div>
+  </div>`;
+}
+function renderPath(k,ctx,path,w,ageLabel,idPrefix){
+  if(!path) return `<div class="danger">Unable to determine adult/pediatric pathway. Select Adult or Pediatric mode.</div>`;
+  const r=path;
+  const id=(idPrefix||`${k}_${ctx}`).replace(/[^a-zA-Z0-9_-]/g,"_");
+  let volume=renderLiquid(k,ctx,r,id);
+  let dailyNote="";
+  if(r.basis==="daily"){
+    if(r.divisor)
+      dailyNote=`<div class="small"><b>Per-dose estimate:</b> total daily dose ÷ ${r.divisor} ≈ ${formatDose(r.lo/r.divisor)}–${formatDose(r.hi/r.divisor)} ${r.unit}/dose. Confirm the intended regimen.</div>`;
+    else
+      dailyNote=`<div class="warn"><b>Daily regimen:</b> the database provides a total daily dose but the frequency cannot be converted reliably to a single dose automatically.</div>`;
+  }
+  const capNote=r.maxWasCapped?`<div class="warn"><b>Maximum applied:</b> the programmed maximum of ${formatDose(r.max)} ${r.unit} was applied to the calculated amount.</div>`:"";
+  return `<div class="result">
+    <h2>${D[k].name} <span class="badge">${r.pop}</span></h2>
+    <div class="big">${r.doseText}</div>
+    ${r.range&&r.basis==="dose"&&!r.numeric?`<p><b>Calculated pediatric range:</b> ${r.range}.</p>`:""}
+    ${r.defaultNote?`<div class="warn"><b>Dose-selection note:</b> ${r.defaultNote}</div>`:""}
+    ${capNote}${dailyNote}
+    <p><b>Weight:</b> ${w} kg ${ageLabel?`&nbsp; <b>Age:</b> ${ageLabel}`:""} &nbsp; <b>Frequency:</b> ${r.freq}</p>
+    <p><b>Reference expression:</b> ${r.expr}</p>
+    <p class="small"><b>Selected reference framework:</b> ${sourceLabel(getSource())}. ${sourceApplicability(k,ageLabel==="Not entered"?null:parseFloat(ageLabel),ctx)}</p>
+    <div class="optionbox"><b>Medication-specific reference set:</b><br><span class="small">${drugReferenceText(k)}</span></div>
+    ${volume}
+  </div>`;
+}
+
+
+/* === Drug safety information layer ===
+   Display-only safety summaries. The legacy pregnancy letter is shown only as
+   historical context; current prescribing should use risk-benefit/PLLR-style
+   pregnancy information and the current Ethiopian/local formulary. */
+const SAFETY={
+"amoxicillin-clavulanate":{i:["Warfarin/anticoagulants → INR may change; monitor when clinically relevant","Allopurinol → increased rash risk","Probenecid → increased amoxicillin exposure"],s:["Diarrhea","Nausea/vomiting","Rash","Rare cholestatic/hepatic injury","Hypersensitivity/anaphylaxis"],c:["Immediate/severe beta-lactam hypersensitivity","Previous amoxicillin/clavulanate-associated cholestatic jaundice/hepatic dysfunction","Formulation-specific renal dosing required in significant renal impairment"],p:"Generally compatible when clinically indicated; use current pregnancy safety information rather than legacy letter categories"},paracetamol:{i:["Warfarin (regular/high-dose use may increase INR)","Enzyme inducers/alcohol may increase hepatotoxicity risk"],s:["Nausea","Rash","Hepatotoxicity in overdose/high exposure"],c:["Severe hepatic impairment or active liver disease","Hypersensitivity"],p:"B (legacy); generally preferred analgesic when clinically indicated"},
+ibuprofen:{i:["Anticoagulants/antiplatelets → bleeding","ACEI/ARB + diuretic → renal injury","Other NSAIDs → additive toxicity"],s:["Dyspepsia","GI ulcer/bleeding","Renal impairment","Fluid retention"],c:["NSAID hypersensitivity","Active GI bleeding/ulcer","Severe renal/hepatic failure","CABG perioperative use"],p:"C; D in 3rd trimester (legacy) — avoid late pregnancy"},
+diclofenac:{i:["Anticoagulants/antiplatelets → bleeding","ACEI/ARB + diuretic → renal injury","Other NSAIDs"],s:["Dyspepsia","GI ulcer/bleeding","Renal injury","Edema/CV events"],c:["Active GI ulcer/bleeding","Severe renal/hepatic disease","NSAID hypersensitivity","CABG perioperative use"],p:"C; D in 3rd trimester (legacy)"},
+naproxen:{i:["Anticoagulants/antiplatelets","ACEI/ARB + diuretic","Other NSAIDs"],s:["GI irritation/bleeding","Renal impairment","Edema","Hypersensitivity"],c:["Active GI bleeding/ulcer","Severe renal failure","NSAID hypersensitivity","CABG perioperative use"],p:"C; D in 3rd trimester (legacy)"},
+ketorolac:{i:["Anticoagulants/antiplatelets → bleeding","ACEI/ARB + diuretic → renal injury","Other NSAIDs"],s:["GI bleeding","Renal injury","Nausea","Headache"],c:["Active GI ulcer/bleeding","Renal impairment/dehydration","Bleeding disorders","NSAID hypersensitivity"],p:"C; D in 3rd trimester (legacy) — avoid late pregnancy"},
+morphine:{i:["Benzodiazepines/CNS depressants → respiratory depression","Alcohol/other opioids","MAOIs: avoid/major caution depending product"],s:["Sedation","Nausea/vomiting","Constipation","Respiratory depression"],c:["Significant respiratory depression","Acute/severe asthma without monitoring","Paralytic ileus","Hypersensitivity"],p:"C (legacy); neonatal respiratory depression/withdrawal possible with prolonged use"},
+tramadol:{i:["SSRIs/SNRIs/TCAs/MAOIs → serotonin syndrome/seizures","CNS depressants","CYP2D6/3A4 inhibitors or inducers"],s:["Nausea","Dizziness","Sedation","Seizures/serotonin syndrome"],c:["Significant respiratory depression","Acute intoxication with CNS depressants","Uncontrolled epilepsy","MAOI use/within restricted interval"],p:"C (legacy); use only when benefit clearly outweighs risk"},
+amoxicillin:{i:["Warfarin → possible INR change","Methotrexate → increased toxicity","Allopurinol may increase rash"],s:["Diarrhea","Nausea","Rash","Allergic reaction"],c:["Immediate serious penicillin/β-lactam allergy","Infectious mononucleosis-associated rash risk"],p:"B (legacy); extensive clinical experience"},
+"amoxicillin-clavulanate":{i:["Warfarin → possible INR change","Methotrexate → increased toxicity","Allopurinol may increase rash"],s:["Diarrhea","Nausea","Rash","Cholestatic/hepatic injury"],c:["Serious β-lactam allergy","Previous amoxicillin/clavulanate-associated cholestatic jaundice/hepatic dysfunction"],p:"B (legacy); commonly used when indicated"},
+ampicillin:{i:["Warfarin → possible INR change","Methotrexate → increased toxicity","Allopurinol → rash"],s:["Diarrhea","Rash","Allergy","Candidiasis"],c:["Serious penicillin allergy","Infectious mononucleosis: marked rash risk"],p:"B (legacy)"},
+benzylpenicillin:{i:["Warfarin → possible INR change","Methotrexate","Probenecid → increased penicillin exposure"],s:["Allergic reaction","Diarrhea","Injection-site reactions","Electrolyte load at high doses"],c:["Serious penicillin allergy"],p:"B (legacy)"},
+phenoxymethylpenicillin:{i:["Warfarin → possible INR change","Methotrexate","Probenecid"],s:["Nausea","Diarrhea","Rash","Allergy"],c:["Serious penicillin allergy"],p:"B (legacy)"},
+cloxacillin:{i:["Warfarin → possible INR change","Methotrexate","Probenecid"],s:["GI upset","Rash","Allergy","Hepatic injury"],c:["Serious penicillin allergy","Previous cholestatic/hepatic injury attributed to cloxacillin"],p:"B (legacy)"},
+flucloxacillin:{i:["Warfarin → possible INR change","Methotrexate","Probenecid"],s:["GI upset","Rash","Allergy","Cholestatic hepatitis"],c:["Serious penicillin allergy","Previous flucloxacillin-associated hepatic dysfunction"],p:"B (legacy)"},
+cefazolin:{i:["Warfarin → possible INR change","Other nephrotoxic drugs: monitor renal function"],s:["Diarrhea","Rash","Allergy","C. difficile infection"],c:["Serious cephalosporin/β-lactam allergy"],p:"B (legacy)"},
+cefuroxime:{i:["Warfarin → possible INR change","Probenecid → increased levels"],s:["Diarrhea","Nausea","Rash","Allergy"],c:["Serious cephalosporin/β-lactam allergy"],p:"B (legacy)"},
+cefotaxime:{i:["Warfarin → possible INR change","Other nephrotoxic drugs: monitor renal function"],s:["Diarrhea","Rash","Allergy","C. difficile infection"],c:["Serious cephalosporin/β-lactam allergy"],p:"B (legacy)"},
+ceftriaxone:{i:["Calcium-containing IV solutions in neonates → precipitation risk","Warfarin → possible INR change"],s:["Diarrhea","Rash","Biliary sludge/pseudolithiasis","Allergy"],c:["Serious cephalosporin/β-lactam allergy","Neonates with hyperbilirubinemia or concurrent IV calcium: avoid"],p:"B (legacy)"},
+cefixime:{i:["Warfarin → possible INR change","Probenecid → increased exposure"],s:["Diarrhea","Nausea","Rash","Allergy"],c:["Serious cephalosporin/β-lactam allergy"],p:"B (legacy)"},
+ceftazidime:{i:["Warfarin → possible INR change","Other nephrotoxins → renal monitoring"],s:["Diarrhea","Rash","Allergy","Neurotoxicity if accumulation"],c:["Serious β-lactam allergy"],p:"B (legacy)"},
+cefepime:{i:["Warfarin → possible INR change","Other nephrotoxins","Renally cleared: toxicity rises with renal failure"],s:["Diarrhea","Rash","Allergy","Encephalopathy/seizures with accumulation"],c:["Serious β-lactam allergy"],p:"B (legacy)"},
+"piperacillin-tazobactam":{i:["Anticoagulants/antiplatelets → bleeding risk may rise","Vancomycin → AKI risk","Methotrexate → toxicity"],s:["Diarrhea","Rash","Allergy","Cytopenias with prolonged use","Electrolyte load"],c:["Serious β-lactam allergy"],p:"B (legacy)"},
+meropenem:{i:["Valproate → markedly reduced valproate levels/seizure breakthrough","Warfarin → possible INR change"],s:["Diarrhea","Rash","Nausea","Seizures (higher risk with CNS disease/renal failure)"],c:["Serious β-lactam/carbapenem allergy"],p:"B (legacy)"},
+ertapenem:{i:["Valproate → reduced levels","Warfarin → possible INR change"],s:["Diarrhea","Nausea","Rash","Infusion/injection reactions"],c:["Serious β-lactam allergy"],p:"B (legacy)"},
+azithromycin:{i:["QT-prolonging drugs","Warfarin → INR may increase","Digoxin → levels may increase"],s:["Nausea/diarrhea","QT prolongation","Hepatotoxicity","Allergy"],c:["Previous macrolide-associated cholestatic jaundice/hepatic dysfunction","Significant QT-risk/arrhythmia"],p:"B (legacy)"},
+clarithromycin:{i:["Statins (simvastatin/lovastatin) → myopathy","Warfarin → INR increase","QT-prolonging drugs","CYP3A4 substrates"],s:["GI upset","QT prolongation","Taste disturbance","Hepatotoxicity"],c:["Macrolide allergy","Certain QT-risk conditions","Concomitant contraindicated CYP3A4 drugs"],p:"C (legacy); generally avoid if safer alternatives exist"},
+doxycycline:{i:["Antacids/iron/calcium → reduced absorption","Warfarin → anticoagulant effect may increase","Retinoids → intracranial hypertension risk"],s:["GI irritation/esophagitis","Photosensitivity","Tooth/bone effects in developing fetus/child","Hepatotoxicity"],c:["Hypersensitivity","Avoid routine use in pregnancy unless specialist-directed"],p:"D (legacy); avoid in pregnancy when alternatives exist"},
+ciprofloxacin:{i:["Antacids/iron/calcium → reduced absorption","Warfarin → INR change","QT-prolonging drugs","CYP1A2 substrates"],s:["Nausea/diarrhea","Tendinopathy","CNS effects","QT prolongation"],c:["Hypersensitivity","Avoid routine use in pregnancy unless clearly indicated"],p:"C (legacy); reserve for clear indications"},
+levofloxacin:{i:["Antacids/iron/calcium → reduced absorption","Warfarin → INR change","QT-prolonging drugs"],s:["GI upset","Tendinopathy","CNS effects","QT prolongation"],c:["Hypersensitivity","Avoid routine use in pregnancy unless clearly indicated"],p:"C (legacy)"},
+clindamycin:{i:["Neuromuscular blockers → potentiation","Other drugs causing C. difficile risk"],s:["Diarrhea","C. difficile colitis","Rash","Hepatotoxicity"],c:["Previous severe clindamycin-associated colitis","Hypersensitivity"],p:"B (legacy)"},
+metronidazole:{i:["Warfarin → INR increase","Disulfiram → neuropsychiatric reaction","Alcohol → avoid during treatment and shortly after course","Lithium → toxicity"],s:["Nausea","Metallic taste","Peripheral neuropathy with prolonged use","Dark urine"],c:["Hypersensitivity","Disulfiram use/recent use","First trimester: use according to indication/local guidance"],p:"B (legacy); commonly used when indicated"},
+vancomycin:{i:["Other nephrotoxins → AKI","Other ototoxins → additive toxicity","Piperacillin-tazobactam → AKI risk"],s:["Nephrotoxicity","Infusion reaction (flushing/hypotension)","Ototoxicity uncommon","Neutropenia with prolonged therapy"],c:["Serious hypersensitivity","Dose/monitoring must account for renal function"],p:"B (legacy); use when clearly indicated"},
+gentamicin:{i:["Other nephrotoxins","Loop diuretics/ototoxins","Neuromuscular blockers"],s:["Nephrotoxicity","Ototoxicity","Neuromuscular blockade"],c:["Hypersensitivity","Use extreme caution in renal impairment"],p:"D (legacy); fetal ototoxicity concern"},
+amikacin:{i:["Other nephrotoxins","Other ototoxins","Neuromuscular blockers"],s:["Nephrotoxicity","Ototoxicity","Neuromuscular blockade"],c:["Hypersensitivity","Use extreme caution in renal impairment"],p:"D (legacy); fetal ototoxicity concern"},
+"co-trimoxazole":{i:["Warfarin → INR increase","Methotrexate → marrow toxicity","ACEI/ARB/spironolactone → hyperkalemia","Phenytoin → increased exposure"],s:["Rash/SJS-TEN","Hyperkalemia","Cytopenias","GI upset"],c:["Sulfonamide/trimethoprim allergy","Severe folate-deficiency states","Significant renal/hepatic impairment without adjustment"],p:"C (legacy); avoid near term when possible; folate considerations"},
+fluconazole:{i:["Warfarin → INR increase","QT-prolonging drugs","Phenytoin/other CYP substrates → level changes","Sulfonylureas → hypoglycemia"],s:["Nausea","Hepatotoxicity","QT prolongation","Rash"],c:["Serious azole allergy","Significant hepatic/QT-risk situations"],p:"C (legacy); high-dose/prolonged exposure has fetal risk"},
+"amphotericin-b":{i:["Other nephrotoxins","Digoxin → electrolyte disturbances may increase toxicity","QT-risk from hypokalemia"],s:["Infusion reactions","Nephrotoxicity","Hypokalemia/hypomagnesemia","Anemia"],c:["Serious hypersensitivity","Requires renal/electrolyte monitoring"],p:"B (legacy); preferred systemic antifungal in many pregnancies when indicated"},
+acyclovir:{i:["Probenecid → increased exposure","Other nephrotoxins → renal monitoring"],s:["Nausea","Headache","Renal crystalluria/nephrotoxicity","Neurotoxicity with accumulation"],c:["Hypersensitivity","Renal impairment requires dose adjustment"],p:"B (legacy)"},
+furosemide:{i:["Digoxin → toxicity risk if hypokalemia","Lithium → increased lithium levels","NSAIDs → reduced diuretic effect/renal risk","Aminoglycosides → ototoxicity"],s:["Volume depletion","Hypokalemia","Hyponatremia","Hypotension","Ototoxicity at high IV exposure"],c:["Anuria","Severe electrolyte depletion","Hypersensitivity"],p:"C (legacy); use only when clinically indicated"},
+spironolactone:{i:["ACEI/ARB → hyperkalemia","Potassium supplements → hyperkalemia","NSAIDs → renal impairment/hyperkalemia","Digoxin → assay/level effects"],s:["Hyperkalemia","Renal impairment","Gynecomastia","Hypotension"],c:["Hyperkalemia","Anuria/significant renal failure","Concomitant potassium-sparing therapy"],p:"C (legacy); limited pregnancy data; avoid routine use"},
+hydrochlorothiazide:{i:["Lithium → increased levels","Digoxin → toxicity if hypokalemia","NSAIDs → reduced effect","Other antihypertensives → additive hypotension"],s:["Hyponatremia","Hypokalemia","Hyperuricemia","Hypotension"],c:["Anuria","Severe electrolyte depletion","Hypersensitivity"],p:"B (legacy)"},
+enalapril:{i:["Potassium supplements/spironolactone → hyperkalemia","NSAIDs → renal injury/reduced effect","Lithium → toxicity"],s:["Hypotension","Hyperkalemia","Rise in creatinine","Cough/angioedema"],c:["Pregnancy","History of ACEI angioedema","Bilateral renal artery stenosis"],p:"C (1st trimester); D (2nd/3rd trimester) — contraindicated in pregnancy"},
+lisinopril:{i:["Potassium supplements/spironolactone","NSAIDs","Lithium"],s:["Hypotension","Hyperkalemia","Rise in creatinine","Cough/angioedema"],c:["Pregnancy","ACEI angioedema","Bilateral renal artery stenosis"],p:"C (1st trimester); D (2nd/3rd trimester) — contraindicated in pregnancy"},
+losartan:{i:["Potassium supplements/spironolactone → hyperkalemia","NSAIDs → renal injury","Lithium → toxicity"],s:["Hypotension","Hyperkalemia","Renal impairment","Dizziness"],c:["Pregnancy","Severe hepatic/renal disease without adjustment","Bilateral renal artery stenosis"],p:"C (1st trimester); D (2nd/3rd trimester) — contraindicated in pregnancy"},
+amlodipine:{i:["Other antihypertensives → additive hypotension","CYP3A4 inhibitors/inducers may alter exposure"],s:["Ankle edema","Flushing","Headache","Dizziness"],c:["Hypersensitivity","Severe hypotension/shock"],p:"C (legacy); use if benefits outweigh risks"},
+atenolol:{i:["Other BP/heart-rate lowering drugs","Insulin/antidiabetics → mask hypoglycemia","Calcium-channel blockers → bradycardia/hypotension"],s:["Bradycardia","Hypotension","Fatigue","Bronchospasm"],c:["Severe bradycardia/heart block","Cardiogenic shock","Decompensated HF","Asthma/bronchospasm: caution"],p:"D (legacy); fetal growth restriction/bradycardia concerns"},
+propranolol:{i:["Insulin/antidiabetics → mask hypoglycemia","Other rate-lowering drugs","CYP2D6 inhibitors"],s:["Bradycardia","Hypotension","Fatigue","Bronchospasm"],c:["Asthma/bronchospasm","Severe bradycardia/heart block","Cardiogenic shock"],p:"C (legacy); neonatal bradycardia/hypoglycemia possible"},
+digoxin:{i:["Amiodarone/verapamil/macrolides → increased levels","Loop/thiazide diuretics → hypokalemia and toxicity","P-gp inhibitors"],s:["Nausea/vomiting","Bradyarrhythmia","Visual changes","Confusion/arrhythmias"],c:["Ventricular fibrillation","Certain AV blocks without pacing","Toxic serum concentration"],p:"C (legacy); monitor closely"},
+aspirin:{i:["Anticoagulants/antiplatelets → bleeding","NSAIDs → GI/renal toxicity","Methotrexate → toxicity"],s:["Dyspepsia","GI bleeding","Bronchospasm","Renal injury"],c:["Active bleeding/ulcer","Salicylate allergy","Children with viral illness: Reye syndrome concern","Severe renal disease"],p:"C; D in 3rd trimester (legacy); low-dose obstetric use is indication-specific"},
+clopidogrel:{i:["Anticoagulants/NSAIDs → bleeding","CYP2C19 inhibitors (notably omeprazole) may reduce activation","SSRIs → bleeding risk"],s:["Bleeding","Bruising","Dyspepsia","Rare TTP"],c:["Active pathological bleeding","Hypersensitivity"],p:"B (legacy); limited pregnancy data"},
+warfarin:{i:["Very many interactions: antibiotics, amiodarone, azoles, NSAIDs, antiplatelets","Dietary vitamin K changes affect INR","Alcohol may alter INR"],s:["Bleeding","Skin necrosis","Purple toe syndrome","Fetal complications"],c:["Pregnancy (except selected specialist indications such as mechanical valves)","Active major bleeding"],p:"X (legacy) — generally contraindicated in pregnancy"},
+enoxaparin:{i:["Antiplatelets/NSAIDs → bleeding","Other anticoagulants/thrombolytics → bleeding","Neuraxial anesthesia → spinal hematoma risk"],s:["Bleeding","Injection-site hematoma","Thrombocytopenia/HIT uncommon","Hyperkalemia"],c:["Active major bleeding","History of HIT","Severe thrombocytopenia"],p:"B (legacy); widely used when anticoagulation is indicated in pregnancy"},
+heparin:{i:["Antiplatelets/NSAIDs → bleeding","Other anticoagulants/thrombolytics → bleeding"],s:["Bleeding","HIT","Osteoporosis with prolonged use","Hyperkalemia"],c:["Active major bleeding","History of HIT","Severe thrombocytopenia"],p:"C (legacy); does not cross placenta; commonly used in pregnancy"},
+omeprazole:{i:["Clopidogrel → may reduce antiplatelet activation","Warfarin → INR changes possible","Methotrexate high dose → increased toxicity"],s:["Headache","Diarrhea","Hypomagnesemia with prolonged use","C. difficile risk"],c:["Hypersensitivity to PPIs","Concomitant contraindicated drugs"],p:"C (legacy)"},
+pantoprazole:{i:["Warfarin → INR changes possible","Methotrexate high dose → increased toxicity","Other pH-dependent drugs"],s:["Headache","Diarrhea","Hypomagnesemia","C. difficile risk"],c:["Hypersensitivity to PPIs"],p:"B (legacy)"},
+famotidine:{i:["Drugs requiring acidic pH for absorption","Renally cleared drugs may accumulate in renal failure"],s:["Headache","Diarrhea/constipation","Confusion mainly in older/renal-impaired patients"],c:["Hypersensitivity","Dose reduction in renal impairment"],p:"B (legacy)"},
+metoclopramide:{i:["Antipsychotics → additive EPS","Levodopa/dopamine agonists → antagonism","SSRIs → serotonin/EPS risk"],s:["Drowsiness","Akathisia/EPS","Diarrhea","Tardive dyskinesia with prolonged use"],c:["GI obstruction/bleeding/perforation","Pheochromocytoma","Seizure disorders: caution","Parkinson disease: caution"],p:"B (legacy)"},
+ondansetron:{i:["QT-prolonging drugs","Apomorphine → contraindicated","Serotonergic drugs → serotonin syndrome risk"],s:["Headache","Constipation","QT prolongation","Serotonin syndrome rare"],c:["Apomorphine concomitant use","Congenital/acquired long-QT: caution"],p:"B (legacy; obstetric use is indication-specific)"},
+dexamethasone:{i:["CYP3A4 inducers/inhibitors","NSAIDs → GI risk","Antidiabetics → reduced glycemic control"],s:["Hyperglycemia","Mood changes","Infection risk","GI irritation"],c:["Systemic fungal infection","Live vaccines with immunosuppressive dosing"],p:"C (legacy); use when indicated"},
+hydrocortisone:{i:["NSAIDs → GI risk","Diuretics → electrolyte effects","Antidiabetics → hyperglycemia","CYP3A4 drugs"],s:["Hyperglycemia","Fluid retention","Hypertension","Infection risk"],c:["Systemic fungal infection","Untreated serious infection without appropriate therapy"],p:"C (legacy)"},
+prednisolone:{i:["NSAIDs → GI risk","Antidiabetics → hyperglycemia","Live vaccines at immunosuppressive doses","CYP3A4 drugs"],s:["Hyperglycemia","Hypertension","Mood changes","Infection risk"],c:["Systemic fungal infection","Live vaccines with immunosuppressive dosing"],p:"C (legacy); placental transfer is lower than dexamethasone"},
+diazepam:{i:["Opioids/alcohol/CNS depressants → respiratory depression","Other sedatives","CYP3A4/2C19 inhibitors"],s:["Sedation","Ataxia","Respiratory depression","Dependence/withdrawal"],c:["Severe respiratory insufficiency","Sleep apnea","Myasthenia gravis","Severe hepatic impairment"],p:"D (legacy); neonatal sedation/withdrawal possible"},
+lorazepam:{i:["Opioids/alcohol/CNS depressants","Valproate/probenecid may alter exposure"],s:["Sedation","Ataxia","Respiratory depression","Dependence/withdrawal"],c:["Severe respiratory insufficiency","Sleep apnea","Myasthenia gravis","Severe hepatic impairment"],p:"D (legacy)"},
+levetiracetam:{i:["Few major PK interactions; enzyme-inducing AEDs can alter levels","CNS depressants → additive sedation"],s:["Somnolence","Dizziness","Irritability/behavioral changes","Rash"],c:["Hypersensitivity","Renal impairment requires dose adjustment"],p:"C (legacy); pregnancy often favors when antiseizure treatment is required"},
+phenytoin:{i:["Warfarin/oral contraceptives and many CYP substrates","Folate → reduced levels","Enteral feeds → reduced absorption"],s:["Nystagmus/ataxia","Gingival hyperplasia","Rash/SJS","Hepatotoxicity"],c:["Hypersensitivity","Certain sinus bradycardia/AV block for IV use"],p:"D (legacy); fetal hydantoin syndrome risk"},
+phenobarbital:{i:["Many CYP substrates including warfarin and oral contraceptives","CNS depressants"],s:["Sedation","Respiratory depression","Cognitive impairment","Dependence"],c:["Severe respiratory disease","Porphyria","Severe hepatic impairment"],p:"D (legacy); neonatal sedation/withdrawal"},
+gabapentin:{i:["Opioids/CNS depressants → respiratory depression/sedation","Antacids → reduced absorption"],s:["Dizziness","Somnolence","Ataxia","Peripheral edema"],c:["Hypersensitivity","Renal impairment requires dose adjustment"],p:"C (legacy)"},
+fluoxetine:{i:["MAOIs → serotonin syndrome","Other serotonergic drugs","CYP2D6 substrates/inhibitors","Tamoxifen → reduced activation"],s:["Nausea","Insomnia","Sexual dysfunction","Serotonin syndrome"],c:["MAOI use/recent use","Pimozide/thioridazine with contraindicated combinations"],p:"C (legacy); neonatal adaptation/PPHN considerations"},
+sertraline:{i:["MAOIs → serotonin syndrome","Other serotonergic drugs","NSAIDs/anticoagulants → bleeding","CYP interactions"],s:["Nausea","Diarrhea","Insomnia","Sexual dysfunction"],c:["MAOI use/recent use","Pimozide","Hypersensitivity"],p:"C (legacy); often considered one of the preferred SSRIs when treatment is necessary"},
+haloperidol:{i:["QT-prolonging drugs","CNS depressants","Levodopa/dopamine agonists → antagonism"],s:["EPS/akathisia","QT prolongation","Sedation","Neuroleptic malignant syndrome"],c:["Coma/severe CNS depression","Parkinson disease","Known QT prolongation/ventricular arrhythmia"],p:"C (legacy)"},
+metformin:{i:["Iodinated contrast in selected patients → lactic acidosis risk context","Alcohol → increased lactic acidosis risk","Cimetidine and renal cation transport inhibitors"],s:["GI upset","Diarrhea","B12 deficiency with long-term use","Lactic acidosis rare"],c:["Severe renal impairment","Metabolic acidosis","Severe hypoxia/unstable states"],p:"B (legacy)"},
+"insulin-regular":{i:["Other glucose-lowering agents → hypoglycemia","Beta-blockers → mask hypoglycemia","Potassium-lowering drugs → hypokalemia"],s:["Hypoglycemia","Hypokalemia","Weight gain","Injection reactions"],c:["Hypoglycemia","Hypersensitivity"],p:"B (legacy); insulin is standard therapy in pregnancy when indicated"},
+"insulin-nph":{i:["Other glucose-lowering agents → hypoglycemia","Beta-blockers → mask hypoglycemia","Potassium-lowering drugs → hypokalemia"],s:["Hypoglycemia","Hypokalemia","Weight gain","Injection reactions"],c:["Hypoglycemia","Hypersensitivity"],p:"B (legacy); widely used in pregnancy"},
+glibenclamide:{i:["Other antidiabetics → hypoglycemia","Beta-blockers → mask hypoglycemia","Warfarin and CYP interactions possible"],s:["Hypoglycemia","Weight gain","GI upset","Allergy"],c:["Type 1 diabetes/DKA","Severe hepatic/renal impairment","Hypersensitivity"],p:"C (legacy); insulin generally preferred in pregnancy"},
+allopurinol:{i:["Azathioprine/6-MP → severe toxicity unless dose greatly reduced","Warfarin → possible effect","Thiazides → hypersensitivity risk"],s:["Rash/SJS-TEN","GI upset","Hepatotoxicity","Hypersensitivity"],c:["Previous severe allopurinol hypersensitivity","Acute gout flare: do not initiate solely to treat acute pain"],p:"C (legacy)"},
+colchicine:{i:["Strong CYP3A4/P-gp inhibitors → severe toxicity","Statins → myopathy risk","Renal/hepatic impairment increases exposure"],s:["Diarrhea","Vomiting","Myopathy","Bone marrow suppression in toxicity"],c:["Significant renal/hepatic impairment with strong CYP3A4/P-gp inhibitors","Hypersensitivity"],p:"C (legacy)"},
+"ferrous-sulfate":{i:["Tetracyclines/fluoroquinolones → reduced absorption","Levothyroxine → reduced absorption","Antacids/calcium → reduced absorption"],s:["Constipation","Nausea","Dark stools","Abdominal discomfort"],c:["Iron-overload disorders","Hemochromatosis/hemosiderosis"],p:"A (legacy)"},"folic-acid":{i:["Antiepileptics may alter folate status; folate may alter some drug levels","Methotrexate: therapeutic folate/folinic strategy should be clinician-directed"],s:["Usually well tolerated","Rare rash/GI upset"],c:["Untreated B12 deficiency should not be masked by high-dose folate alone"],p:"A (legacy)"},"vitamin-d":{i:["Thiazides → may increase hypercalcemia risk","Digoxin → arrhythmia risk if hypercalcemia develops","Other vitamin D/calcium products → additive toxicity"],s:["Hypercalcemia","Nausea/vomiting","Constipation","Polyuria/renal stones with excess exposure"],c:["Hypercalcemia","Hypervitaminosis D","Use caution in significant granulomatous disease or conditions predisposing to hypercalcemia"],p:"Pregnancy: generally compatible at recommended doses; avoid excessive/repeated high-dose use unless clinically indicated. Current practice uses narrative risk assessment rather than legacy FDA letter categories."},
+"artemether-lumefantrine":{i:["QT-prolonging drugs","CYP3A4 inducers/inhibitors","Mefloquine/other antimalarials: specialist guidance"],s:["Headache","Dizziness","GI upset","QT prolongation"],c:["Severe QT-risk/arrhythmia","Concomitant strong CYP3A4 drugs that are contraindicated"],p:"C (legacy); use in pregnancy when malaria treatment benefit warrants"},
+artesunate:{i:["Review concomitant antimalarials and other medicines used for severe malaria","Clinically important interactions are limited; follow the complete malaria regimen and current national protocol"],s:["Delayed post-artesunate hemolytic anemia","GI upset","Transient neutropenia/uncommon cytopenias","Hypersensitivity"],c:["Known hypersensitivity to artesunate or artemisinin derivatives","Post-treatment hemolysis requires clinical follow-up after treatment of severe malaria"],p:"Pregnancy: recommended for severe malaria in pregnancy, including all trimesters, when indicated; lifesaving treatment should not be delayed. WHO recommends 3 mg/kg/dose for children <20 kg and 2.4 mg/kg/dose for children ≥20 kg and adults."},
+rifampicin:{i:["Strong enzyme induction → reduces many drug levels including warfarin, OCPs, some antiretrovirals","May reduce azole and steroid exposure"],s:["Hepatotoxicity","Orange body fluids","GI upset","Thrombocytopenia uncommon"],c:["Severe hepatic disease","Hypersensitivity"],p:"C (legacy); use in TB treatment when indicated"},
+isoniazid:{i:["Phenytoin/carbamazepine → levels may increase","Rifampicin → additive hepatotoxicity","Alcohol → hepatotoxicity"],s:["Hepatotoxicity","Peripheral neuropathy","Nausea","Lupus-like syndrome rare"],c:["Acute severe liver disease","Previous severe isoniazid hepatitis"],p:"C (legacy); pyridoxine often required in pregnancy"},
+pyrazinamide:{i:["Other hepatotoxic drugs → increased liver injury","Uric acid raising drugs → gout risk"],s:["Hepatotoxicity","Hyperuricemia","Arthralgia","GI upset"],c:["Severe hepatic disease","Previous severe pyrazinamide hepatotoxicity"],p:"C (legacy); used in pregnancy in TB regimens when indicated"},
+ethambutol:{i:["Antacids → reduced absorption","Other neurotoxic/ocular-risk drugs"],s:["Optic neuritis","Color vision change","Peripheral neuropathy"],c:["Optic neuritis","Inability to monitor vision adequately"],p:"C (legacy); generally used when indicated"},
+salbutamol:{i:["Beta-blockers → reduced bronchodilator effect","Other sympathomimetics → tachycardia/hypokalemia","Diuretics → hypokalemia"],s:["Tremor","Tachycardia","Palpitations","Hypokalemia"],c:["Hypersensitivity","Tachyarrhythmia: caution"],p:"C (legacy); inhaled use commonly continued when indicated"},
+epinephrine:{i:["Nonselective beta-blockers → severe hypertension/bradycardia","MAOIs/TCAs → enhanced pressor effects","Other sympathomimetics"],s:["Tachycardia","Tremor","Hypertension","Arrhythmias"],c:["No absolute contraindication in anaphylaxis; relative cautions depend on indication"],p:"C (legacy); lifesaving in anaphylaxis — do not withhold"},
+atropine:{i:["Other anticholinergics → additive effects","Certain antihistamines/TCAs → anticholinergic toxicity"],s:["Dry mouth","Tachycardia","Blurred vision","Urinary retention"],c:["Narrow-angle glaucoma","Urinary retention/obstructive uropathy","Tachyarrhythmias: caution"],p:"C (legacy)"},
+adenosine:{i:["Dipyridamole → potentiates effect","Theophylline → reduces effect","Caffeine may reduce effect"],s:["Flushing","Chest discomfort","Dyspnea","Transient AV block"],c:["2nd/3rd-degree AV block without pacemaker","Sick sinus syndrome without pacemaker","Active bronchospasm/severe asthma: caution"],p:"C (legacy)"},
+"magnesium-sulfate":{i:["Other CNS depressants → additive depression","Calcium-channel blockers → hypotension/neuromuscular effects","Neuromuscular blockers"],s:["Flushing","Hypotension","Loss of reflexes","Respiratory depression/toxicity"],c:["Heart block","Severe renal failure: major caution","Hypermagnesemia"],p:"B (legacy); standard obstetric use when indicated"},
+"calcium-gluconate":{i:["Digoxin → arrhythmia risk","Phosphate/bicarbonate-containing IV solutions → precipitation","Tetracyclines/fluoroquinolones orally → absorption effects"],s:["Local irritation/extravasation","Hypercalcemia","Bradyarrhythmia if rapid IV"],c:["Hypercalcemia","Ventricular fibrillation","Digoxin toxicity: specialist-directed use"],p:"C (legacy)"},
+"potassium-chloride":{i:["ACEI/ARB/spironolactone → hyperkalemia","Potassium-sparing diuretics","NSAIDs → hyperkalemia risk"],s:["GI irritation","Hyperkalemia","Arrhythmias","Phlebitis/extravasation with IV"],c:["Hyperkalemia","Severe renal failure without monitoring","Do not give IV as undiluted bolus"],p:"C (legacy)"},
+mannitol:{i:["Other diuretics → additive effects","Nephrotoxic drugs → renal monitoring","Digoxin: electrolyte changes can increase toxicity"],s:["Fluid/electrolyte shifts","Pulmonary edema","Headache","Acute kidney injury"],c:["Anuria","Severe pulmonary edema/CHF","Severe dehydration","Active intracranial bleeding except during craniotomy"],p:"C (legacy)"},
+labetalol:{i:["Other antihypertensives → additive hypotension","Beta-blockers","Insulin/antidiabetics → mask hypoglycemia"],s:["Hypotension","Bradycardia","Dizziness","Bronchospasm"],c:["Asthma/bronchospasm","Severe bradycardia/heart block","Cardiogenic shock","Decompensated HF"],p:"C (legacy); commonly used for hypertension in pregnancy"},
+hydralazine:{i:["Other antihypertensives → additive hypotension","MAOIs/other vasodilators"],s:["Headache","Tachycardia","Flushing","Lupus-like syndrome with prolonged use"],c:["Severe tachycardia","Coronary artery disease: caution","Hypersensitivity"],p:"C (legacy); commonly used when indicated in pregnancy"},
+methyldopa:{i:["Iron salts → reduced absorption","Other antihypertensives → additive hypotension","Levodopa → antagonism"],s:["Sedation","Orthostatic hypotension","Elevated liver enzymes/hepatitis","Hemolytic anemia rare"],c:["Active hepatic disease","Previous methyldopa-associated liver injury","MAOI use"],p:"B (legacy); extensive pregnancy experience"},
+nifedipine:{i:["CYP3A4 inhibitors/inducers","Other antihypertensives → additive hypotension","Grapefruit may increase exposure depending formulation"],s:["Headache","Flushing","Ankle edema","Hypotension"],c:["Cardiogenic shock","Severe hypotension","Hypersensitivity"],p:"C (legacy); commonly used when indicated in pregnancy"},
+"ferrous-folate":{i:["Tetracyclines/fluoroquinolones → reduced absorption","Levothyroxine → reduced absorption","Antacids/calcium → reduced iron absorption"],s:["Constipation","Nausea","Dark stools","Abdominal discomfort"],c:["Iron-overload disorders","Hypersensitivity"],p:"A (legacy)"},
+"rh-immunoglobulin":{i:["Live vaccines → immunoglobulin may reduce response to some live viral vaccines; follow product-specific timing guidance","No clinically important drug interactions are expected with routine obstetric medicines"],s:["Injection-site pain/tenderness","Fever/chills","Headache","Rare hypersensitivity/anaphylaxis"],c:["Previous severe hypersensitivity to human immunoglobulin or product components","Already RhD-sensitized: prophylaxis does not reverse established alloimmunization"],p:"Pregnancy: specifically indicated for prevention of RhD alloimmunization in eligible unsensitized RhD-negative patients; use gestational/event-specific obstetric protocol."}
+};
+/* === Expanded Ethiopia-focused medicine database — August 2026 ===
+   Dose pathways are intentionally indication-specific. Protocol-only entries do not
+   invent a numeric dose when a national regimen/weight-band/route protocol should be used. */
+Object.assign(D,{
+  // OBSTETRICS / GYNECOLOGY
+  "oxytocin":{name:"Oxytocin",tags:["Obstetric", "Uterotonic", "High-risk"],opts:{
+    pph:{label:"Postpartum hemorrhage — uterine atony",p:[0,0,0,"IV infusion / protocol","use current Ethiopian PPH/obstetric protocol"],a:["Protocol-based","IV infusion","Titrate to uterine response; do not use a generic fixed dose"]},
+    induction:{label:"Labor induction / augmentation",p:[0,0,0,"IV infusion / protocol","titrate according to uterine activity and fetal monitoring"],a:["Protocol-based","IV infusion","Continuous fetal/uterine monitoring"]}}},
+  "misoprostol":{name:"Misoprostol",tags:["Obstetric", "Gynecology", "Prostaglandin"],opts:{
+    pph:{label:"Postpartum hemorrhage — prevention/treatment",p:[0,0,0,"single dose / protocol","dose and route are indication-specific"],a:["Protocol-based","single dose / protocol","Use current Ethiopian PPH guideline"]},
+    induction:{label:"Cervical ripening / induction",p:[0,0,0,"vaginal/oral protocol","dose is gestational-age and route specific"],a:["Protocol-based","route-specific","Use current obstetric protocol"]},
+    abortion:{label:"Medical abortion / pregnancy loss",p:[0,0,0,"protocol","gestational-age-specific regimen"],a:["Protocol-based","protocol","Use current national/reproductive-health protocol"]}}},
+  "ergometrine":{name:"Ergometrine (Ergonovine)",tags:["Obstetric", "Uterotonic", "High-risk"],opts:{pph:{label:"Postpartum hemorrhage",p:[0,0,0,"IM/IV protocol","route and repeat dosing are protocol-specific"],a:["0.2 mg IM/slow IV","repeat per protocol","Avoid in significant hypertension/preeclampsia"]}}},
+  "carboprost":{name:"Carboprost (15-methyl PGF2α)",tags:["Obstetric", "Uterotonic", "High-risk"],opts:{pph:{label:"Refractory postpartum hemorrhage",p:[0,0,0,"IM/intramyometrial protocol","specialist obstetric regimen"],a:["250 micrograms IM","repeat per protocol","Avoid/caution in asthma"]}}},
+  "tranexamic-acid":{name:"Tranexamic Acid",tags:["Antifibrinolytic", "Obstetric", "Surgery"],opts:{pph:{label:"Postpartum hemorrhage",p:[0,0,0,"IV protocol","use early in PPH according to current national protocol"],a:["1 g IV","protocol; repeat if indicated","Renal adjustment may be required"]},surgery:{label:"Major bleeding / perioperative antifibrinolysis",p:[10,15,1000,"IV protocol","indication-specific"],a:["1 g IV","protocol","Dose/route depend on procedure and bleeding"]}}},
+  "betamethasone":{name:"Betamethasone",tags:["Corticosteroid", "Obstetric", "Antenatal steroid"],opts:{preterm:{label:"Antenatal corticosteroid for threatened preterm birth",p:[0,0,0,"IM protocol","use gestational-age-specific obstetric regimen"],a:["12 mg IM","repeat after 24 h per protocol","Complete course according to current obstetric guideline"]}}},
+  "progesterone":{name:"Progesterone",tags:["Gynecology", "Obstetric", "Hormone"],opts:{obstetric:{label:"Selected pregnancy-support indications",p:[0,0,0,"route/product-specific","indication-specific regimen"],a:["Protocol/product specific","route-specific","Do not substitute oral/vaginal/IM products without checking formulation"]},gyn:{label:"Selected gynecologic indications",p:[0,0,0,"q24h / cyclic protocol","indication-specific"],a:["Protocol/product specific","cyclic or daily","Use exact formulation and indication"]}}},
+  "clotrimazole-vaginal":{name:"Clotrimazole (Vaginal)",tags:["Gynecology", "Antifungal"],opts:{vvc:{label:"Vulvovaginal candidiasis",p:[0,0,0,"vaginal course","formulation-specific course"],a:["Product/formulation specific","intravaginal","Pregnancy: prefer locally acting therapy when indicated"]}}},
+  "levonorgestrel":{name:"Levonorgestrel",tags:["Gynecology", "Contraception"],opts:{ec:{label:"Emergency contraception",p:[0,0,1.5,"single dose","1.5 mg oral once"],a:["1.5 mg PO","single dose","Use as soon as possible after unprotected intercourse"]},pop:{label:"Progestin-only contraception",p:[0,0,0.03,"daily","product-specific"],a:["Product-specific","daily","Use exact contraceptive product instructions"]}}},
+  "medroxyprogesterone":{name:"Medroxyprogesterone Acetate",tags:["Gynecology", "Contraception"],opts:{dmpa:{label:"Depot contraception (DMPA)",p:[0,0,150,"IM every 3 months","150 mg IM every 3 months; product-specific"],a:["150 mg IM","every 3 months","Confirm formulation and eligibility"]}}},
+  "combined-oral-contraceptive":{name:"Combined Oral Contraceptive (Ethinylestradiol + Progestin)",tags:["Gynecology", "Contraception"],opts:{contraception:{label:"Combined hormonal contraception",p:[0,0,0,"daily / product regimen","product-specific"],a:["Product-specific","daily","Screen contraindications before prescribing"]}}},
+  "methylergometrine":{name:"Methylergometrine",tags:["Obstetric", "Uterotonic"],opts:{pph:{label:"Postpartum hemorrhage",p:[0,0,0,"IM/IV protocol","use current obstetric protocol"],a:["Protocol-based","route-specific","Avoid in hypertension/preeclampsia"]}}},
+  "rh-immunoglobulin":{name:"Anti-D Immunoglobulin (RhD immune globulin)",tags:["Obstetric", "Immunoglobulin"],opts:{
+    routine:{label:"Routine antenatal RhD prophylaxis",p:[0,0,0,"single IM dose at 28–30 weeks / local protocol","300 micrograms (1,500 IU) IM; product strength may vary"],a:["300 micrograms (1,500 IU) IM","single dose at 28–30 weeks","Use the current Ethiopian/obstetric protocol and exact local product strength"]},
+    postpartum:{label:"Postpartum prophylaxis — RhD-negative, unsensitized mother",p:[0,0,0,"IM within 72 h of delivery","300 micrograms (1,500 IU) if indicated; assess fetomaternal hemorrhage for additional dosing"],a:["300 micrograms (1,500 IU) IM","within 72 h after delivery","Give when the infant is RhD-positive/unknown and the mother is not already sensitized; assess significant fetomaternal hemorrhage and give additional product as indicated"]},
+    sensitizing:{label:"After a sensitizing event",p:[0,0,0,"IM as soon as possible, preferably within 72 h","300 micrograms (1,500 IU) commonly covers up to 30 mL fetal whole blood; additional dose depends on fetomaternal hemorrhage"],a:["300 micrograms (1,500 IU) IM","as soon as possible, preferably within 72 h","Event- and gestation-specific dosing applies; quantify significant fetomaternal hemorrhage when indicated and do not give prophylaxis to an already sensitized patient"]}}
+  },
+
+  // SURGERY / ANAESTHESIA / PERIOPERATIVE
+  "ketamine":{name:"Ketamine",tags:["Anaesthetic", "Emergency", "High-risk"],opts:{induction:{label:"Procedural/anaesthetic induction",p:[1,2,200,"IV/IM protocol","route and depth of anesthesia specific"],a:["1–2 mg/kg IV","slow IV / protocol","Airway and cardiorespiratory monitoring"]},analgesia:{label:"Subanaesthetic analgesia",p:[0.1,0.3,50,"IV/IM protocol","specialist/acute pain protocol"],a:["0.1–0.3 mg/kg IV","protocol","Monitor sedation and airway"]}}},
+  "propofol":{name:"Propofol",tags:["Anaesthetic", "High-risk"],opts:{induction:{label:"General anaesthesia induction",p:[1.5,2.5,200,"IV once","titrate to effect"],a:["1.5–2.5 mg/kg IV","once","Anaesthesia-provider use with airway/resuscitation capability"]},sedation:{label:"Procedural sedation",p:[0.5,1,100,"IV titration","specialist protocol"],a:["0.5–1 mg/kg IV then titrate","titrated","Continuous monitoring"]}}},
+  "fentanyl":{name:"Fentanyl",tags:["Opioid", "Anaesthetic", "High-risk"],opts:{analgesia:{label:"Acute/perioperative analgesia",p:[0.5,1,100,"IV/IM/IN protocol","route and indication specific"],a:["25–100 micrograms IV/IM","titrate","Respiratory monitoring required"]}}},
+  "midazolam":{name:"Midazolam",tags:["Benzodiazepine", "Anaesthetic", "High-risk"],opts:{sedation:{label:"Procedural sedation / premedication",p:[0.05,0.1,5,"IV/IM protocol","titrate to effect; age/route specific"],a:["1–5 mg IV","titrate","Airway/respiratory monitoring"]},seizure:{label:"Acute seizure/status adjunct",p:[0.1,0.2,10,"IV/IM/buccal/IN protocol","route-specific"],a:["5–10 mg","protocol","Respiratory monitoring"]}}},
+  "lidocaine":{name:"Lidocaine (Lignocaine)",tags:["Local anaesthetic", "Emergency"],opts:{local:{label:"Local infiltration / nerve block",p:[1,3,300,"local protocol","maximum dose depends on formulation and vasoconstrictor"],a:["1–4.5 mg/kg typical maximum without adrenaline","route/procedure-specific","Check concentration; avoid intravascular injection"]},arrhythmia:{label:"Ventricular arrhythmia",p:[1,1.5,100,"IV bolus protocol","specialist ACLS regimen"],a:["1–1.5 mg/kg IV","protocol","ECG monitoring"]}}},
+  "bupivacaine":{name:"Bupivacaine",tags:["Local anaesthetic", "High-risk"],opts:{regional:{label:"Regional/neuraxial anaesthesia",p:[0.5,2,175,"route/procedure specific","maximum dose depends on route/concentration"],a:["Procedure/formulation specific","route-specific","Avoid intravascular injection; monitor for LAST"]}}},
+  "succinylcholine":{name:"Succinylcholine",tags:["Neuromuscular blocker", "High-risk"],opts:{intubation:{label:"Rapid sequence intubation",p:[1,2,200,"IV once","weight/clinical-state specific"],a:["1–1.5 mg/kg IV","once","Airway/ventilation and anesthesia protocol"]}}},
+  "rocuronium":{name:"Rocuronium",tags:["Neuromuscular blocker", "High-risk"],opts:{intubation:{label:"Tracheal intubation",p:[0.6,1.2,150,"IV once","dose depends on routine vs rapid-sequence intubation"],a:["0.6–1.2 mg/kg IV","once","Ventilation and reversal capability required"]}}},
+  "neostigmine":{name:"Neostigmine",tags:["Neuromuscular reversal"],opts:{reversal:{label:"Reversal of non-depolarizing neuromuscular blockade",p:[0.03,0.07,5,"IV once","titrate to block; give antimuscarinic per protocol"],a:["0.03–0.07 mg/kg IV","once","Use anesthesia reversal protocol"]}}},
+  "sugammadex":{name:"Sugammadex",tags:["Neuromuscular reversal", "High-risk"],opts:{reversal:{label:"Rocuronium/vecuronium reversal",p:[2,4,400,"IV once","depth-of-block specific"],a:["2–4 mg/kg IV","once","Use quantitative neuromuscular monitoring where available"]}}},
+  "bupivacaine-heavy":{name:"Bupivacaine (local anaesthetic)",tags:["Local anaesthetic"],opts:{local:{label:"Local/regional anaesthesia",p:[0,0,0,"procedure-specific","use exact concentration and maximum dose protocol"],a:["Procedure/formulation specific","route-specific","Do not use a generic mg/kg maximum across neuraxial and peripheral techniques"]}}},
+  "surgical-prophylaxis":{name:"Surgical antimicrobial prophylaxis (protocol entry)",tags:["Surgery", "Antimicrobial"],opts:{prophylaxis:{label:"Perioperative antimicrobial prophylaxis",p:[0,0,0,"pre-incision protocol","select agent by procedure and local antibiogram"],a:["Protocol-based","before incision","Use current Ethiopian STG/institutional surgical prophylaxis protocol"]}}},
+
+  // INTERNAL MEDICINE / CARDIOLOGY / ENDOCRINE / GI / RESPIRATORY
+  "atorvastatin":{name:"Atorvastatin",tags:["Statin", "Cardiovascular"],opts:{lipid:{label:"Dyslipidemia / ASCVD prevention",p:[0,0,80,"q24h","adult fixed-dose regimen"],a:["10–80 mg","q24h","Intensity and indication determine dose; monitor liver/muscle symptoms"]}}},
+  "simvastatin":{name:"Simvastatin",tags:["Statin"],opts:{lipid:{label:"Dyslipidemia",p:[0,0,40,"q24h","adult fixed-dose regimen"],a:["10–40 mg","q24h","Check drug interactions"]}}},
+  "rosuvastatin":{name:"Rosuvastatin",tags:["Statin"],opts:{lipid:{label:"Dyslipidemia / ASCVD prevention",p:[0,0,40,"q24h","adult fixed-dose regimen"],a:["5–40 mg","q24h","Renal/interaction considerations apply"]}}},
+  "levothyroxine":{name:"Levothyroxine",tags:["Thyroid hormone", "Endocrine"],opts:{hypothyroid:{label:"Hypothyroidism",p:[0.5,1.6,300,"q24h","dose is individualized to TSH, age and cardiac status"],a:["25–200 micrograms","q24h","Individualize; take consistently on empty stomach"]},pregnancy:{label:"Hypothyroidism in pregnancy",p:[0,0,0,"q24h / protocol","pregnancy-specific TSH targets and dose adjustment"],a:["Individualized","q24h","Use pregnancy thyroid protocol and monitor TSH"]}}},
+  "carbimazole":{name:"Carbimazole",tags:["Antithyroid", "Endocrine"],opts:{hyperthyroid:{label:"Hyperthyroidism",p:[0,0,40,"q24h / divided","adult regimen is severity-dependent"],a:["15–40 mg/day","daily/divided","Monitor CBC/LFT and thyroid function"]}}},
+  "propylthiouracil":{name:"Propylthiouracil (PTU)",tags:["Antithyroid", "Endocrine"],opts:{hyperthyroid:{label:"Hyperthyroidism / selected pregnancy pathway",p:[0,0,600,"q8h","adult regimen indication-specific"],a:["100–200 mg","q8h","Use pregnancy-specific/thyroid protocol; hepatotoxicity risk"]}}},
+  "empagliflozin":{name:"Empagliflozin",tags:["SGLT2 inhibitor", "Antidiabetic"],opts:{t2dm:{label:"Type 2 diabetes / selected cardiorenal indications",p:[0,0,25,"q24h","adult fixed-dose regimen"],a:["10–25 mg","q24h","Renal indication/eligibility specific"]}}},
+  "sitagliptin":{name:"Sitagliptin",tags:["DPP-4 inhibitor", "Antidiabetic"],opts:{t2dm:{label:"Type 2 diabetes",p:[0,0,100,"q24h","renal adjustment required"],a:["100 mg","q24h","Adjust for renal function"]}}},
+  "gliclazide":{name:"Gliclazide",tags:["Sulfonylurea", "Antidiabetic"],opts:{t2dm:{label:"Type 2 diabetes",p:[0,0,320,"q24h / divided","adult regimen product-specific"],a:["40–320 mg/day","daily/divided","Hypoglycemia risk; product formulation matters"]}}},
+  "lactulose":{name:"Lactulose",tags:["Laxative", "GI"],opts:{constipation:{label:"Constipation",p:[1,2,60,"q12–24h","age-dependent; titrate to 1–2 soft stools/day"],a:["15–30 mL","q12–24h","Titrate to response"]},encephalopathy:{label:"Hepatic encephalopathy",p:[0,0,0,"q1–2h initially then titrate","protocol-based"],a:["25 mL","q1–2h initially then titrate","Target 2–3 soft stools/day"]}}},
+  "bisacodyl":{name:"Bisacodyl",tags:["Laxative", "GI"],opts:{constipation:{label:"Constipation",p:[0,0,10,"q24h PRN","age/formulation dependent"],a:["5–10 mg PO","q24h PRN","Short-term use"]}}},
+  "loperamide":{name:"Loperamide",tags:["Antidiarrheal", "GI"],opts:{diarrhea:{label:"Acute non-bloody diarrhea in adults",p:[0,0,16,"initial then after stools","do not use in invasive/bloody diarrhea"],a:["4 mg initially, then 2 mg after loose stool","PRN","Maximum 16 mg/day; avoid in dysentery/fever"]}}},
+  "ors":{name:"Oral Rehydration Salts (ORS)",tags:["Fluid", "Pediatrics", "GI"],opts:{dehydration:{label:"Acute diarrhea / dehydration",p:[0,0,0,"frequent small amounts","use current WHO/Ethiopian dehydration plan"],a:["Protocol-based","frequent oral administration","Use Plan A/B/C and exact sachet dilution"]}}},
+  "zinc":{name:"Zinc",tags:["Micronutrient", "Pediatrics", "GI"],opts:{diarrhea:{label:"Acute diarrhea in children",p:[10,20,20,"q24h","10 mg/day if <6 months; 20 mg/day if ≥6 months for 10–14 days"],a:["10–20 mg","q24h for 10–14 days","Use age-appropriate elemental zinc product"]}}},
+  "ipratropium":{name:"Ipratropium Bromide",tags:["Bronchodilator", "Respiratory"],opts:{acute:{label:"Acute asthma/COPD bronchospasm",p:[0,0,0,"nebulized/inhaled protocol","device/age specific"],a:["250–500 micrograms nebulized","q4–6h / acute protocol","Often combined with salbutamol in severe acute asthma"]}}},
+  "budesonide":{name:"Budesonide",tags:["Inhaled corticosteroid", "Respiratory"],opts:{asthma:{label:"Asthma controller",p:[0,0,1600,"daily/divided","device/age and severity specific"],a:["Product/device-specific","daily/divided","Not a rescue medicine"]}}},
+  "beclomethasone":{name:"Beclometasone Dipropionate (Inhaled)",tags:["Inhaled corticosteroid", "Respiratory"],opts:{asthma:{label:"Asthma controller",p:[0,0,800,"daily/divided","device/age/severity specific"],a:["Product/device-specific","daily/divided","Not a rescue medicine"]}}},
+  "aminophylline":{name:"Aminophylline",tags:["Bronchodilator", "High-risk"],opts:{acute:{label:"Severe asthma — selected rescue pathway",p:[5,6,500,"IV loading / infusion protocol","use only where current protocol supports it; serum level interactions important"],a:["Protocol-based","IV infusion","Narrow therapeutic index; specialist monitoring"]}}},
+
+  // NEUROPSYCHIATRY
+  "valproate":{name:"Sodium Valproate",tags:["Anticonvulsant", "High-risk"],opts:{seizure:{label:"Seizure disorder",p:[10,15,3000,"q12–24h","start low and titrate; indication-specific"],a:["500–1000 mg/day initially","divided","Pregnancy/childbearing safety is critical; specialist review"]},status:{label:"Status epilepticus — loading",p:[20,40,3000,"IV once / protocol","specialist emergency regimen"],a:["20–40 mg/kg IV","once","Use status epilepticus protocol"]}}},
+  "carbamazepine":{name:"Carbamazepine",tags:["Anticonvulsant"],opts:{seizure:{label:"Focal seizures",p:[5,10,1200,"q12h / divided","titrate gradually"],a:["100–200 mg","q12h initially; titrate","Check interactions and sodium"]}}},
+  "lamotrigine":{name:"Lamotrigine",tags:["Anticonvulsant", "Psychiatry"],opts:{seizure:{label:"Epilepsy",p:[0,0,500,"q24h / divided","slow titration; interaction-dependent"],a:["25 mg start","daily then titrate","Rash/SJS risk; titrate slowly"]},bipolar:{label:"Bipolar maintenance",p:[0,0,200,"q24h","adult titration protocol"],a:["25 mg start","q24h then titrate","Slow titration required"]}}},
+  "amitriptyline":{name:"Amitriptyline",tags:["Tricyclic antidepressant", "Neuropathic pain", "High-risk"],opts:{neuropathic:{label:"Neuropathic pain",p:[0,0,150,"q24h / titrate","adult regimen; lower starting dose in older adults"],a:["10–25 mg","q24h at night then titrate","Anticholinergic/cardiac toxicity"]},depression:{label:"Depression",p:[0,0,150,"q24h / divided","specialist/psychiatric regimen"],a:["25–50 mg","daily/divided","Overdose can be fatal"]}}},
+  "olanzapine":{name:"Olanzapine",tags:["Antipsychotic"],opts:{psychosis:{label:"Schizophrenia / acute psychosis",p:[0,0,20,"q24h / protocol","adult fixed-dose regimen"],a:["5–10 mg","q24h","Metabolic monitoring"]}}},
+  "risperidone":{name:"Risperidone",tags:["Antipsychotic"],opts:{psychosis:{label:"Psychosis / schizophrenia",p:[0,0,8,"q24h / divided","adult regimen; pediatric indication-specific"],a:["1–2 mg","q24h / divided","Titrate; monitor EPS/prolactin/metabolic effects"]}}},
+
+  // COMMON PEDIATRIC / PRIMARY CARE / INFECTIOUS
+  "benzathine-penicillin":{name:"Benzathine Benzylpenicillin",tags:["Penicillin", "Pediatrics", "STI"],opts:{syphilis:{label:"Syphilis",p:[0,0,2400000,"IM according to stage","use current national STI protocol"],a:["2.4 million units IM","protocol/stage specific","Do not substitute IV/IM penicillin formulations"]},rhd:{label:"Rheumatic fever secondary prophylaxis",p:[0,0,1200000,"IM every 3–4 weeks / protocol","age/weight and national program dependent"],a:["1.2 million units IM","every 3–4 weeks / protocol","Use national rheumatic fever protocol"]}}},
+  "oral-iron":{name:"Ferrous Fumarate",tags:["Iron", "Pediatrics"],opts:{ida:{label:"Iron deficiency anemia",p:[3,6,200,"q24h / divided","3–6 mg/kg/day elemental iron; product-dependent"],a:["Elemental iron 60–120 mg/day","daily/divided","Dose by elemental iron, not salt mass"]}}},
+  "cyanocobalamin":{name:"Vitamin B12 (Cyanocobalamin)",tags:["Vitamin", "Hematology"],opts:{deficiency:{label:"Vitamin B12 deficiency",p:[0,0,1000,"IM/PO protocol","route and cause specific"],a:["1000 micrograms","protocol","Use deficiency-specific replacement regimen"]}}},
+  "thiamine":{name:"Thiamine (Vitamin B1)",tags:["Vitamin", "Emergency"],opts:{deficiency:{label:"Thiamine deficiency / Wernicke risk",p:[0,0,500,"IV/IM protocol","high-dose protocol depends on indication"],a:["100–500 mg","IV/IM protocol","Give before/with glucose when severe deficiency risk is suspected"]}}},
+  "vitamin-k":{name:"Vitamin K1 (Phytomenadione)",tags:["Vitamin", "Antidote", "Pediatrics"],opts:{bleeding:{label:"Vitamin K deficiency / anticoagulant reversal",p:[0,0,10,"route/protocol specific","indication and age specific"],a:["1–10 mg","route/protocol","Use exact reversal/neonatal protocol"]}}},
+  "naloxone":{name:"Naloxone",tags:["Antidote", "Emergency"],opts:{opioid:{label:"Opioid toxicity",p:[0.01,0.1,2,"IV/IM/IN repeat/titrate","titrate to adequate ventilation"],a:["0.04–0.4 mg initially, titrate","repeat as needed","Shorter half-life than some opioids; monitor for re-sedation"]}}},
+  "flumazenil":{name:"Flumazenil",tags:["Antidote", "High-risk"],opts:{benzodiazepine:{label:"Selected benzodiazepine reversal",p:[0,0,1,"IV titration","specialist protocol"],a:["0.2 mg IV","titrate per protocol","Avoid routine use in chronic benzodiazepine dependence/mixed overdose"]}}},
+  "activated-charcoal":{name:"Activated Charcoal",tags:["Toxicology", "Emergency"],opts:{poisoning:{label:"Selected acute poisoning",p:[0.5,1,50,"single dose / toxicology protocol","only for selected ingestions and appropriate airway"],a:["25–50 g","single dose / protocol","Do not give to unprotected airway or corrosive/hydrocarbon ingestion"]}}},
+  "pyridoxine":{name:"Pyridoxine (Vitamin B6)",tags:["Vitamin", "Antidote"],opts:{tb:{label:"TB-related pyridoxine supplementation",p:[0,0,50,"q24h","dose depends on age/risk and TB regimen"],a:["10–50 mg","q24h / protocol","Use national TB guideline for high-risk groups"]},overdose:{label:"Isoniazid toxicity",p:[0,0,0,"IV protocol","dose matched to amount of isoniazid ingested"],a:["Toxicology protocol","IV","Urgent toxicology management"]}}},
+  "albendazole":{name:"Albendazole",tags:["Anthelmintic", "Pediatrics"],opts:{worms:{label:"Common intestinal helminths",p:[0,0,400,"single dose / course","age-specific regimen"],a:["400 mg","single dose or course","Use organism-specific/national deworming protocol"]}}},
+  "mebendazole":{name:"Mebendazole",tags:["Anthelmintic", "Pediatrics"],opts:{worms:{label:"Common intestinal helminths",p:[0,0,100,"q12h / course","age and organism dependent"],a:["100 mg","q12h for 3 days or protocol","Use organism-specific regimen"]}}},
+  "praziquantel":{name:"Praziquantel",tags:["Anthelmintic"],opts:{schistosomiasis:{label:"Schistosomiasis",p:[40,60,3600,"divided in one day / protocol","species and infection specific"],a:["40–60 mg/kg","divided over one day","Use national schistosomiasis protocol"]}}},
+  "ivermectin":{name:"Ivermectin",tags:["Antiparasitic"],opts:{scabies:{label:"Scabies / selected parasitic infections",p:[0.2,0.2,12,"single/repeat protocol","age/weight eligibility and program protocol apply"],a:["200 micrograms/kg","single/repeat protocol","Avoid in very young children unless national protocol permits"]}}}
+});
+
+/* Reference mapping for every added pathway. The UI uses these labels to make the
+   evidence hierarchy visible rather than implying that one textbook covers every drug. */
+const DRUG_REFS={
+  "oxytocin":["Ethiopian STG / national obstetric protocol","Gabbe 9e","Williams 26e"],"misoprostol":["Ethiopian STG / national obstetric protocol","Gabbe 9e","Williams 26e"],"ergometrine":["Ethiopian STG / national obstetric protocol","Gabbe 9e","Williams 26e"],"carboprost":["Ethiopian STG / national obstetric protocol","Gabbe 9e","Williams 26e"],"tranexamic-acid":["Ethiopian STG / national protocol","Gabbe 9e","Williams 26e"],"betamethasone":["Ethiopian obstetric protocol","Gabbe 9e","Williams 26e"],"progesterone":["Ethiopian STG / national protocol","Gabbe 9e","Williams 26e"],"clotrimazole-vaginal":["Ethiopian STG / national protocol","Gabbe 9e","Williams 26e"],"levonorgestrel":["Ethiopian STG / national reproductive-health protocol","Williams 26e"],"medroxyprogesterone":["Ethiopian STG / national reproductive-health protocol","Williams 26e"],"combined-oral-contraceptive":["Ethiopian STG / national reproductive-health protocol","Williams 26e"],"methylergometrine":["Ethiopian STG / national obstetric protocol","Gabbe 9e","Williams 26e"],"rh-immunoglobulin":["Ethiopian obstetric protocol","Gabbe 9e","Williams 26e"],
+  "ketamine":["Ethiopian STG / national protocol","Current anaesthesia/perioperative protocol"],"propofol":["Ethiopian STG / national protocol","Current anaesthesia/perioperative protocol"],"fentanyl":["Ethiopian STG / national protocol","Current anaesthesia/perioperative protocol"],"midazolam":["Ethiopian STG / national protocol","Current anaesthesia/perioperative protocol"],"lidocaine":["Ethiopian STG / national protocol","Current anaesthesia/emergency protocol"],"bupivacaine":["Ethiopian STG / national protocol","Current anaesthesia/perioperative protocol"],"succinylcholine":["Current anaesthesia/perioperative protocol"],"rocuronium":["Current anaesthesia/perioperative protocol"],"neostigmine":["Current anaesthesia/perioperative protocol"],"sugammadex":["Current anaesthesia/perioperative protocol"],"surgical-prophylaxis":["Ethiopian STG","Local surgical antimicrobial prophylaxis protocol"],  "magnesium-sulfate":["Ethiopian Obstetrics Management Protocol / national obstetric protocol","WHO recommendations on pre-eclampsia and eclampsia","Gabbe 9e","Williams 26e","Acute severe asthma guideline / emergency protocol"],
+  "atorvastatin":["Ethiopian STG","Ethiopian NCD protocol","Harrison"],"simvastatin":["Ethiopian STG","Ethiopian NCD protocol","Harrison"],"rosuvastatin":["Ethiopian STG","Ethiopian NCD protocol","Harrison"],"levothyroxine":["Ethiopian STG","Harrison","Gabbe 9e for pregnancy"],"carbimazole":["Ethiopian STG","Harrison","Gabbe 9e for pregnancy"],"propylthiouracil":["Ethiopian STG","Harrison","Gabbe 9e for pregnancy"],"empagliflozin":["Ethiopian NCD protocol","Harrison"],"sitagliptin":["Ethiopian NCD protocol","Harrison"],"gliclazide":["Ethiopian NCD protocol","Harrison"],"lactulose":["Ethiopian STG","Harrison"],"bisacodyl":["Ethiopian STG","Harrison"],"loperamide":["Ethiopian STG","Harrison"],"ors":["Ethiopian STG","WHO diarrhea/dehydration guidance"],"zinc":["Ethiopian STG","WHO diarrhea/dehydration guidance","Nelson"],"ipratropium":["Ethiopian STG","Harrison","Nelson"],"budesonide":["Ethiopian STG","Harrison","Nelson"],"beclomethasone":["Ethiopian STG","Harrison","Nelson"],"aminophylline":["Ethiopian STG","Harrison","Nelson"],
+  "valproate":["Ethiopian STG","Nelson","Harrison"],"carbamazepine":["Ethiopian STG","Nelson","Harrison"],"lamotrigine":["Ethiopian STG","Nelson","Harrison"],"amitriptyline":["Ethiopian STG","Harrison"],"olanzapine":["Ethiopian STG","Harrison"],"risperidone":["Ethiopian STG","Nelson","Harrison"],
+  "benzathine-penicillin":["Ethiopian STG / national STI protocol","Nelson"],"oral-iron":["Ethiopian STG","Nelson"],"cyanocobalamin":["Ethiopian STG","Harrison","Nelson"],"thiamine":["Ethiopian STG","Harrison"],"vitamin-k":["Ethiopian STG","Nelson"],"naloxone":["Ethiopian STG / emergency protocol","Nelson","Harrison"],"flumazenil":["Current toxicology/emergency protocol","Harrison"],"activated-charcoal":["Ethiopian STG / toxicology protocol","Harrison"],"pyridoxine":["Ethiopian TB guideline","Ethiopian STG","Nelson"],"albendazole":["Ethiopian STG","Nelson"],"mebendazole":["Ethiopian STG","Nelson"],"praziquantel":["Ethiopian STG / national parasitic-disease protocol","Nelson"],"ivermectin":["Ethiopian STG / national parasitic-disease protocol","Nelson"]
+};
+Object.keys(DRUG_REFS).forEach(k=>{if(D[k])D[k].refs=DRUG_REFS[k]});
+
+function drugReferenceText(k){
+  if(D[k]?.refs) return D[k].refs.join(" • ");
+  const tags=(D[k]?.tags||[]).join(" ").toLowerCase();
+  if(tags.includes("obstetric")||tags.includes("gynecology")) return "Ethiopian STG / national obstetric protocol • Gabbe 9e • Williams 26e";
+  if(tags.includes("pediatrics")) return "Ethiopian STG • Nelson Textbook of Pediatrics";
+  return "Ethiopian STG / national protocol • Harrison's Principles of Internal Medicine";
+}
+
+/* Antihistamines added to the same database/search pattern. */
+Object.assign(D,{
+"cetirizine":{name:"Cetirizine",tags:["Second-generation antihistamine"],opts:{common:{label:"Allergic rhinitis / urticaria",p:[0.25,0.25,10,"q24h","0.25 mg/kg/day"],a:["10 mg","q24h","usual adult dose; renal adjustment may be needed"]}}},
+"loratadine":{name:"Loratadine",tags:["Second-generation antihistamine"],opts:{common:{label:"Allergic rhinitis / urticaria",p:[0.2,0.2,10,"q24h","0.2 mg/kg/day"],a:["10 mg","q24h","usual adult dose"]}}},
+"chlorpheniramine":{name:"Chlorpheniramine",tags:["First-generation antihistamine"],opts:{common:{label:"Allergic symptoms",p:[0.1,0.2,4,"q4–6h","0.1–0.2 mg/kg/dose"],a:["4 mg","q4–6h","avoid excessive sedation"]}}},
+"diphenhydramine":{name:"Diphenhydramine",tags:["First-generation antihistamine"],opts:{common:{label:"Allergic symptoms / selected indications",p:[1,2,50,"q6h","1–2 mg/kg/dose"],a:["25–50 mg","q4–6h","sedating; max depends on indication"]}}},
+"promethazine":{name:"Promethazine",tags:["First-generation antihistamine / antiemetic"],opts:{common:{label:"Allergy / nausea / motion sickness",p:[0.25,0.5,25,"q4–6h","0.25–0.5 mg/kg/dose"],a:["12.5–25 mg","q4–6h","sedating; route-specific safety applies"]}}},
+"fexofenadine":{name:"Fexofenadine",tags:["Second-generation antihistamine"],opts:{common:{label:"Allergic rhinitis / urticaria",p:[1,2,180,"q12–24h","age/indication dependent"],a:["120–180 mg","q24h","usual adult dose"]}}}
+});
+Object.assign(SAFETY,{
+cetirizine:{i:["CNS depressants/alcohol → additive sedation","Theophylline may modestly increase exposure"],s:["Drowsiness","Dry mouth","Fatigue","Headache"],c:["Hypersensitivity","Dose reduction in significant renal impairment"],p:"B (legacy); human experience generally reassuring"},
+loratadine:{i:["CYP3A4/2D6 inhibitors may increase exposure","CNS depressants → possible additive sedation"],s:["Headache","Dry mouth","Mild drowsiness"],c:["Hypersensitivity","Dose adjustment may be needed in severe hepatic impairment"],p:"B (legacy)"},
+chlorpheniramine:{i:["CNS depressants/alcohol","MAOIs → prolonged/intensified anticholinergic effects","Other anticholinergics"],s:["Sedation","Dry mouth","Blurred vision","Urinary retention"],c:["Hypersensitivity","Narrow-angle glaucoma","Urinary retention","Severe lower respiratory disease: caution"],p:"B (legacy)"},
+diphenhydramine:{i:["Alcohol/opioids/benzodiazepines → marked CNS depression","Other anticholinergics","MAOIs"],s:["Sedation","Confusion","Dry mouth","Urinary retention"],c:["Neonates/premature infants","Narrow-angle glaucoma","Urinary retention","Severe asthma: caution"],p:"B (legacy)"},
+promethazine:{i:["Opioids/benzodiazepines/alcohol → profound sedation/respiratory depression","Other anticholinergics","MAOIs"],s:["Sedation","Hypotension","Anticholinergic effects","Respiratory depression"],c:["Children <2 years — contraindicated","Coma/severe CNS depression","Lower respiratory tract symptoms in young children"],p:"C (legacy); use in pregnancy only when indicated"},
+fexofenadine:{i:["Aluminum/magnesium antacids → reduced absorption","CNS depressants → possible additive effects"],s:["Headache","Nausea","Mild drowsiness uncommon"],c:["Hypersensitivity","Renal impairment may require adjustment"],p:"C (legacy; human data limited but generally reassuring)"}
+});
+function safetyHtml(k){
+ const x=SAFETY[k]||{i:["Check all medicines, OTC products and herbal products for interactions."],s:["Adverse effects vary with dose and patient factors."],c:["Check allergy history, organ function and indication-specific contraindications."],p:"Current pregnancy risk should be assessed from contemporary evidence; no reliable legacy letter category available."};
+ const li=a=>a.map(v=>`<li>${v}</li>`).join("");
+ return `<section class="safety-panel"><div class="safety-head"><div><strong>🛡️ Safety Snapshot</strong><div class="safety-sub">Automatically matched to ${D[k]?.name||k}</div></div><span class="safety-pill">Clinical safety</span></div>
+ <div class="safety-grid"><div class="safety-item"><h4>🔗 Important interactions</h4><ul>${li(x.i)}</ul></div>
+ <div class="safety-item"><h4>⚠️ Common / important adverse effects</h4><ul>${li(x.s)}</ul></div>
+ <div class="safety-item"><h4>⛔ Key contraindications / avoid</h4><ul>${li(x.c)}</ul></div>
+ <div class="safety-item safety-preg"><h4>🤰 Pregnancy</h4><ul><li>${x.p}</li></ul></div></div>
+ <div class="safety-warn"><b>Clinical alert:</b> This is a concise decision-support layer, not a substitute for the current Ethiopian protocol, product label, patient-specific assessment or specialist advice. Check allergy history, renal/hepatic function and interacting medicines before prescribing.</div>
+ <div class="safety-foot"><b>Reference framework:</b> Ethiopian national guidance/standard treatment principles + Nelson + Harrison + contemporary drug-label safety concepts. Legacy FDA A/B/C/D/X letters are displayed only where historically used; FDA replaced these letters with narrative pregnancy risk information under PLLR.</div></section>`;
+}
+
+function calculate(){
+  const k=keyFor(document.getElementById("drug").value);
+  if(k) showOptions();
+  const ageRaw=document.getElementById("age").value.trim();
+  const age=ageRaw===""?null:parseFloat(ageRaw);
+  const w=parseFloat(document.getElementById("weight").value);
+  const h=parseFloat(document.getElementById("height").value);
+  const scr=parseFloat(document.getElementById("scr").value);
+  const sex=document.getElementById("sex").value;
+  const mode=document.getElementById("mode").value;
+  const out=document.getElementById("output");
+  out.classList.remove("hidden");
+  if(!k){out.innerHTML='<div class="danger"><b>Drug not recognized.</b> Choose or type a supported medicine name.</div>';return}
+  if(!Number.isFinite(w)||w<=0){out.innerHTML='<div class="danger"><b>Enter a valid weight.</b></div>';return}
+  if(age!==null&&(!Number.isFinite(age)||age<0||age>120)){out.innerHTML='<div class="danger"><b>Enter a plausible age in years.</b></div>';return}
+  if(mode==="ped"&&age!==null&&age>=18){out.innerHTML='<div class="warn"><b>Check population:</b> Pediatric mode was selected for an age ≥18 years.</div>';return}
+  if(mode==="adult"&&age!==null&&age<18){out.innerHTML='<div class="warn"><b>Check population:</b> Adult mode was selected for an age <18 years.</div>';return}
+  const ctx=document.getElementById("ctx")?.value;
+  if(!ctx||!D[k].opts[ctx]) showOptions();
+  const finalCtx=document.getElementById("ctx")?.value||Object.keys(D[k].opts)[0];
+  const ren=renal(age,w,h,scr,sex);
+  let body=`<h3>Selected option: ${D[k].opts[finalCtx].label}</h3>`;
+  body+=`<div class="optionbox"><b>Reference framework:</b> ${sourceLabel(getSource())}<br><span class="small">${sourceApplicability(k,age,finalCtx)}</span><br><br><b>Medication-specific reference set:</b> <span class="small">${drugReferenceText(k)}</span></div>`;
+  if(k==="amoxicillin-clavulanate"){
+    body+=`<div class="warn"><b>Augmentin dosing standardization:</b> Pediatric dosing is calculated from the <b>amoxicillin component</b>. Ethiopian product information for 228/5 mL and 457/5 mL suspensions uses 25/3.6–45/6.4 mg/kg/day for mild–moderate infection and 45/6.4–70/10 mg/kg/day for more serious infection, in 2 divided doses. For AOM/sinusitis high-dose therapy, use an appropriate 14:1 preparation for 90 mg/kg/day of amoxicillin + 6.4 mg/kg/day clavulanate. Always verify the exact bottle strength before converting to mL.</div>`;
+  }
+  body+=safetyHtml(k);
+  if(mode==="auto"&&age===null){
+    body+=`<div class="warn"><b>Age blank:</b> Both adult and pediatric pathways are shown. Select Adult/Pediatric when the population is known.</div>`;
+    body+=renderPath(k,finalCtx,getPath(k,finalCtx,age,"adult",w),w,"Not entered",`${k}_${finalCtx}_adult`);
+    body+=renderPath(k,finalCtx,getPath(k,finalCtx,age,"ped",w),w,"Not entered",`${k}_${finalCtx}_ped`);
+  }else{
+    body+=renderPath(k,finalCtx,getPath(k,finalCtx,age,mode,w),w,age===null?"Not entered":age+" y",`${k}_${finalCtx}_${mode}`);
+  }
+  const renalRelevant=renalKeys.has(k);
+  body+=`<div class="${renalRelevant?'warn':'ok'}"><b>Renal assessment:</b> ${ren.txt}${renalAdvice(k,ren)}</div>`;
+  if(["vancomycin","gentamicin","amikacin","warfarin","heparin","enoxaparin","insulin-regular","insulin-nph","phenytoin","digoxin","aminophylline"].includes(k))
+    body+=`<div class="danger"><b>High-risk medicine:</b> Mathematical result only. Use the exact current institutional/national protocol, monitoring and specialist guidance before administration.</div>`;
+  out.innerHTML=body;
+}
+
+
+function calculateManualFormulation(){
+  const dose=parseFloat(document.getElementById("manualDose").value);
+  const unit=parseFloat(document.getElementById("liqUnit").value);
+  const conc=parseFloat(document.getElementById("liqConc").value);
+  const strength=parseFloat(document.getElementById("solidStrength").value);
+  const out=document.getElementById("manualFormulation");
+  if(!Number.isFinite(dose)||dose<=0){out.innerHTML='<div class="danger">Enter a valid dose in mg.</div>';return;}
+  let html="";
+  if(Number.isFinite(conc)&&conc>0){
+    const mgPerMl=conc/unit, ml=dose/mgPerMl;
+    html+=`<div class="ok"><div class="big">${formatDose(ml,2)} mL per dose</div>
+      <p class="small">${formatDose(conc,2)} mg per ${unit} mL = ${formatDose(mgPerMl,3)} mg/mL; ${formatDose(dose,2)} mg ÷ ${formatDose(mgPerMl,3)} mg/mL = ${formatDose(ml,2)} mL.</p></div>`;
+  }
+  if(Number.isFinite(strength)&&strength>0){
+    const units=dose/strength;
+    html+=`<div class="optionbox"><b>Tablet/capsule equivalent:</b> ${formatDose(units,2)} unit(s) of ${formatDose(strength,2)} mg.</div>`;
+  }
+  if(!html) html='<div class="warn">Enter a liquid concentration and/or tablet/capsule strength.</div>';
+  out.innerHTML=html;
+}
+
+function calcVol2(id,lo,hi,unit){
+  const doseEl=document.getElementById(`dose_${id}`);
+  const unitEl=document.getElementById(`liqUnit_${id}`);
+  const concEl=document.getElementById(`liqConc_${id}`);
+  const v=document.getElementById(`vol_${id}`);
+  const dose=parseFloat(doseEl?.value), scale=parseFloat(unitEl?.value), c=parseFloat(concEl?.value);
+  if(!Number.isFinite(dose)||dose<=0){v.innerHTML='<div class="danger">Enter a valid dose to convert.</div>';return}
+  if(!Number.isFinite(scale)||scale<=0){v.innerHTML='<div class="danger">Select a valid concentration unit.</div>';return}
+  if(!Number.isFinite(c)||c<=0){v.innerHTML='<div class="danger">Enter a valid liquid concentration.</div>';return}
+  const perMl=c/scale, ml=dose/perMl;
+  const rangeNote=(lo!==hi&&dose>=lo&&dose<=hi)?`<p class="small">Dose entered is within the calculated range of ${formatDose(lo)}–${formatDose(hi)} ${unit}.</p>`:"";
+  v.innerHTML=`<div class="ok"><div class="big">${formatDose(ml,2)} mL per dose</div>
+    <p class="small">${formatDose(dose)} ${unit} ÷ ${formatDose(perMl,3)} ${unit}/mL = ${formatDose(ml,2)} mL.</p>${rangeNote}</div>`;
+}
+
+/* Backward-compatible global syrup calculator. */
+function calcVol(k,ctx,dose){
+  const unitEl=document.getElementById(`unit_${k}_${ctx}`);
+  const concEl=document.getElementById(`conc_${k}_${ctx}`);
+  const v=document.getElementById(`vol_${k}_${ctx}`);
+  if(!unitEl||!concEl||!v)return;
+  const unit=parseFloat(unitEl.value), c=parseFloat(concEl.value);
+  if(!Number.isFinite(c)||c<=0){v.innerHTML='<div class="danger">Enter a valid liquid concentration.</div>';return}
+  const ml=dose/(c/unit);
+  v.innerHTML=`<div class="ok"><div class="big">${formatDose(ml,2)} mL per dose</div><p class="small">${c} mg per ${unit} mL = ${(c/unit).toFixed(3)} mg/mL.</p></div>`;
+}
+function updateSourceInfo(){
+  const el=document.getElementById("sourceInfo"); if(!el)return;
+  const k=keyFor(document.getElementById("drug").value);
+  if(!k){el.textContent="Select a drug to display the applicability of the selected reference framework.";return}
+  const ctx=document.getElementById("ctx")?.value||Object.keys(D[k].opts)[0];
+  const ageRaw=document.getElementById("age").value.trim();
+  const age=ageRaw===""?null:parseFloat(ageRaw);
+  el.textContent=sourceApplicability(k,age,ctx);
+}
+function resetAll(){location.reload();}
+
+const drugInput=document.getElementById("drug");
+drugInput.addEventListener("focus",()=>renderDrugSuggestions(drugInput.value));
+drugInput.addEventListener("click",()=>renderDrugSuggestions(drugInput.value));
+drugInput.addEventListener("input",()=>{
+  renderDrugSuggestions(drugInput.value);
+  showOptions();
+});
+drugInput.addEventListener("change",showOptions);
+drugInput.addEventListener("keydown",e=>{
+  if(e.key==="ArrowDown"){e.preventDefault();moveDrugSuggestion(1);return;}
+  if(e.key==="ArrowUp"){e.preventDefault();moveDrugSuggestion(-1);return;}
+  if(e.key==="Escape"){closeDrugSuggestions();return;}
+  if(e.key==="Enter"){
+    e.preventDefault();
+    if(!chooseHighlightedDrug()) calculate();
+  }
+});
+document.addEventListener("click",e=>{
+  if(!e.target.closest(".autocomplete-wrap")) closeDrugSuggestions();
+});
+document.getElementById("source").addEventListener("change",()=>{updateSourceInfo();if(keyFor(drugInput.value)) calculate();});
+document.getElementById("age").addEventListener("input",updateSourceInfo);
+document.getElementById("mode").addEventListener("change",()=>{if(keyFor(drugInput.value)&&document.getElementById("weight").value)calculate();});
+document.getElementById("weight").addEventListener("input",()=>{if(keyFor(drugInput.value)&&document.getElementById("ctx"))calculate();});
+populate();
+updateSourceInfo();
+
+/* Internal functional smoke tests. These run silently; failures are shown only
+   in the browser console and do not interfere with clinical use. */
+(function selfTest(){
+  try{
+    console.assert(doseBasis("50 mg/kg/day = 25 mg/kg/dose BID")==="dose","ceftriaxone basis");
+    console.assert(doseBasis("25–50 mg/kg/day")==="daily","daily basis");
+    const p=getPath("paracetamol","painfever",10,"ped",10);
+    console.assert(p.numeric===100,"pediatric dose calculation");
+    const a=parseAdultDose("500–1000 mg");
+    console.assert(a.lo===500&&a.hi===1000,"adult parser");
+    console.assert(Math.abs(5-(250/(250/5)))<0.0001,"basic liquid arithmetic");
+  }catch(e){console.error("Dose calculator self-test error:",e);}
+})();
+</script>
+</body>
+</html>
